@@ -1,0 +1,11 @@
+Buatkan issue.md berisi planing untuk membuat :
+
+project system payroll dengan menggunakan:
+
+- framework laravel 12 atau lebih baru.
+- css framework tailwindcss 4.
+- database sql server
+
+Jangan terlalu low level atau detail, cukup instruksikan secara high level
+
+nantinya document planningnya akan bisa digunakan oleh junior programmer untuk implementasikannya.
