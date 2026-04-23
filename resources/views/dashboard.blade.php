@@ -1,154 +1,126 @@
 <x-admin-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-            <nav class="flex" aria-label="Breadcrumb">
-                <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
-                    <li class="inline-flex items-center">
-                        <a href="#" class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-blue-600">
-                            <svg class="w-3 h-3 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z"/>
-                            </svg>
-                            Home
-                        </a>
-                    </li>
-                    <li aria-current="page">
-                        <div class="flex items-center">
-                            <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
-                            </svg>
-                            <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2">Dashboard</span>
-                        </div>
-                    </li>
+        <div class="row flex items-center justify-between">
+            <div class="col-sm-6">
+                <h1 class="m-0 text-2xl font-bold text-gray-800">Dashboard</h1>
+            </div>
+            <div class="col-sm-6 hidden md:block">
+                <ol class="breadcrumb flex text-sm text-gray-500">
+                    <li class="breadcrumb-item"><a href="#" class="text-adminlte-primary hover:underline">Home</a></li>
+                    <li class="breadcrumb-item active ml-2 before:content-['/'] before:mr-2">Dashboard</li>
                 </ol>
-            </nav>
+            </div>
         </div>
     </x-slot>
 
-    <!-- Widgets -->
+    <!-- Small boxes (Stat box) -->
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-        <!-- Card 1 -->
-        <div class="p-4 bg-blue-600 rounded-lg shadow-sm flex items-center justify-between text-white overflow-hidden relative group">
-            <div>
-                <p class="text-3xl font-bold">150</p>
-                <p class="text-sm font-medium opacity-80">Total Employees</p>
+        <!-- small box -->
+        <div class="small-box bg-adminlte-info text-white p-4 rounded relative overflow-hidden shadow-sm group">
+            <div class="inner relative z-10">
+                <h3 class="text-3xl font-bold">150</h3>
+                <p>New Orders</p>
             </div>
-            <div class="opacity-20 group-hover:scale-110 transition-transform">
-                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
+            <div class="icon absolute right-4 top-4 text-black/10 group-hover:scale-110 transition-transform">
+                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
             </div>
-            <a href="#" class="absolute bottom-0 left-0 w-full bg-black/10 py-1 text-center text-xs hover:bg-black/20 transition-colors">More info →</a>
+            <a href="#" class="small-box-footer block text-center bg-black/10 mt-4 py-1 text-xs hover:bg-black/20 transition-colors">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
         
-        <!-- Card 2 -->
-        <div class="p-4 bg-emerald-500 rounded-lg shadow-sm flex items-center justify-between text-white overflow-hidden relative group">
-            <div>
-                <p class="text-3xl font-bold">85%</p>
-                <p class="text-sm font-medium opacity-80">Attendance Rate</p>
+        <!-- small box -->
+        <div class="small-box bg-adminlte-success text-white p-4 rounded relative overflow-hidden shadow-sm group">
+            <div class="inner relative z-10">
+                <h3 class="text-3xl font-bold">53<sup class="text-xl">%</sup></h3>
+                <p>Bounce Rate</p>
             </div>
-            <div class="opacity-20 group-hover:scale-110 transition-transform">
-                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2h6v4H7V4zm6 6H7v2h6v-2zm-6 4h6v2H7v-2z" clip-rule="evenodd"></path></svg>
+            <div class="icon absolute right-4 top-4 text-black/10 group-hover:scale-110 transition-transform">
+                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg>
             </div>
-            <a href="#" class="absolute bottom-0 left-0 w-full bg-black/10 py-1 text-center text-xs hover:bg-black/20 transition-colors">More info →</a>
+            <a href="#" class="small-box-footer block text-center bg-black/10 mt-4 py-1 text-xs hover:bg-black/20 transition-colors">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
 
-        <!-- Card 3 -->
-        <div class="p-4 bg-amber-500 rounded-lg shadow-sm flex items-center justify-between text-white overflow-hidden relative group">
-            <div>
-                <p class="text-3xl font-bold">12</p>
-                <p class="text-sm font-medium opacity-80">Pending Payroll</p>
+        <!-- small box -->
+        <div class="small-box bg-adminlte-warning text-white p-4 rounded relative overflow-hidden shadow-sm group">
+            <div class="inner relative z-10">
+                <h3 class="text-3xl font-bold">44</h3>
+                <p>User Registrations</p>
             </div>
-            <div class="opacity-20 group-hover:scale-110 transition-transform">
-                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"></path></svg>
+            <div class="icon absolute right-4 top-4 text-black/10 group-hover:scale-110 transition-transform">
+                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
             </div>
-            <a href="#" class="absolute bottom-0 left-0 w-full bg-black/10 py-1 text-center text-xs hover:bg-black/20 transition-colors">More info →</a>
+            <a href="#" class="small-box-footer block text-center bg-black/10 mt-4 py-1 text-xs hover:bg-black/20 transition-colors">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
 
-        <!-- Card 4 -->
-        <div class="p-4 bg-rose-500 rounded-lg shadow-sm flex items-center justify-between text-white overflow-hidden relative group">
-            <div>
-                <p class="text-3xl font-bold">5</p>
-                <p class="text-sm font-medium opacity-80">New Tickets</p>
+        <!-- small box -->
+        <div class="small-box bg-adminlte-danger text-white p-4 rounded relative overflow-hidden shadow-sm group">
+            <div class="inner relative z-10">
+                <h3 class="text-3xl font-bold">65</h3>
+                <p>Unique Visitors</p>
             </div>
-            <div class="opacity-20 group-hover:scale-110 transition-transform">
-                <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20"><path d="M2 5a2 2 0 012-2h7a2 2 0 012 2v4a2 2 0 01-2 2H9l-3 3v-3H4a2 2 0 01-2-2V5z"></path><path d="M15 7v2a4 4 0 01-4 4H9.828l-1.766 1.767c.28.149.599.233.938.233h2l3 3v-3h2a2 2 0 002-2V9a2 2 0 00-2-2h-1z"></path></svg>
+            <div class="icon absolute right-4 top-4 text-black/10 group-hover:scale-110 transition-transform">
+                <svg class="w-16 h-16" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20h4V4h-4v16zm-6 0h4v-8H4v8zM16 9v11h4V9h-4z"/></svg>
             </div>
-            <a href="#" class="absolute bottom-0 left-0 w-full bg-black/10 py-1 text-center text-xs hover:bg-black/20 transition-colors">More info →</a>
+            <a href="#" class="small-box-footer block text-center bg-black/10 mt-4 py-1 text-xs hover:bg-black/20 transition-colors">More info <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
 
+    <!-- Main row -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Main Content Box -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-            <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-                <h3 class="text-lg font-semibold text-gray-800">Recent Notifications</h3>
-                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">New</span>
+        <!-- Left col -->
+        <div class="admin-card">
+            <div class="admin-card-header bg-gray-50">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
+                    <span>Sales Overview</span>
+                </div>
+                <div class="card-tools">
+                    <button class="text-gray-400 hover:text-gray-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg></button>
+                </div>
             </div>
-            <div class="p-4">
+            <div class="admin-card-body">
+                <div class="h-64 bg-gray-100 rounded flex items-center justify-center text-gray-400 italic">
+                    [ Sales Chart Placeholder ]
+                </div>
+            </div>
+        </div>
+
+        <!-- Right col -->
+        <div class="admin-card border-t-4 border-adminlte-success">
+            <div class="admin-card-header bg-gray-50">
+                <div class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                    <span>Recent Notifications</span>
+                </div>
+                <span class="badge badge-success bg-adminlte-success text-white text-[10px] px-1.5 rounded-full">4 New</span>
+            </div>
+            <div class="admin-card-body p-0">
                 <ul class="divide-y divide-gray-100">
-                    <li class="py-3 flex items-start">
-                        <div class="w-2 h-2 mt-2 bg-blue-500 rounded-full mr-3 flex-shrink-0"></div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-900">Payroll for April 2026 has been generated.</p>
-                            <p class="text-xs text-gray-500">2 hours ago</p>
+                    <li class="p-4 flex items-start hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 rounded-full bg-adminlte-info/10 flex items-center justify-center text-adminlte-info mr-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-gray-900">New payroll generated</p>
+                            <p class="text-xs text-gray-500">Payroll for April 2026 is ready for review.</p>
+                            <p class="text-[10px] text-gray-400 mt-1">2 mins ago</p>
                         </div>
                     </li>
-                    <li class="py-3 flex items-start">
-                        <div class="w-2 h-2 mt-2 bg-emerald-500 rounded-full mr-3 flex-shrink-0"></div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-900">New employee "Jane Doe" added to HR department.</p>
-                            <p class="text-xs text-gray-500">Yesterday</p>
+                    <li class="p-4 flex items-start hover:bg-gray-50 transition-colors">
+                        <div class="w-10 h-10 rounded-full bg-adminlte-warning/10 flex items-center justify-center text-adminlte-warning mr-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                         </div>
-                    </li>
-                    <li class="py-3 flex items-start">
-                        <div class="w-2 h-2 mt-2 bg-amber-500 rounded-full mr-3 flex-shrink-0"></div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-900">System maintenance scheduled for Sunday.</p>
-                            <p class="text-xs text-gray-500">2 days ago</p>
+                        <div class="flex-1">
+                            <p class="text-sm font-semibold text-gray-900">Server load high</p>
+                            <p class="text-xs text-gray-500">The main server reached 90% CPU usage.</p>
+                            <p class="text-[10px] text-gray-400 mt-1">1 hour ago</p>
                         </div>
                     </li>
                 </ul>
             </div>
-            <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 text-center">
-                <a href="#" class="text-sm font-medium text-blue-600 hover:underline">View all notifications</a>
-            </div>
-        </div>
-
-        <!-- Another Content Box -->
-        <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-            <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
-                <h3 class="text-lg font-semibold text-gray-800">Quick Stats</h3>
-            </div>
-            <div class="p-4">
-                <div class="space-y-4">
-                    <div>
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-sm font-medium text-gray-700">Budget Usage</span>
-                            <span class="text-sm font-medium text-gray-700">75%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-blue-600 h-2 rounded-full" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-sm font-medium text-gray-700">Tasks Completed</span>
-                            <span class="text-sm font-medium text-gray-700">45/60</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-emerald-500 h-2 rounded-full" style="width: 75%"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex items-center justify-between mb-1">
-                            <span class="text-sm font-medium text-gray-700">Server Load</span>
-                            <span class="text-sm font-medium text-gray-700">22%</span>
-                        </div>
-                        <div class="w-full bg-gray-200 rounded-full h-2">
-                            <div class="bg-rose-500 h-2 rounded-full" style="width: 22%"></div>
-                        </div>
-                    </div>
-                </div>
+            <div class="admin-card-footer px-4 py-2 bg-gray-50 border-t border-gray-100 text-center">
+                <a href="#" class="text-sm text-adminlte-primary hover:underline">View All Notifications</a>
             </div>
         </div>
     </div>
 </x-admin-layout>
+

@@ -1,2 +1,49 @@
 @import "tailwindcss";
 
+@theme {
+  --color-adminlte-blue: #007bff;
+  --color-adminlte-indigo: #6610f2;
+  --color-adminlte-purple: #6f42c1;
+  --color-adminlte-pink: #e83e8c;
+  --color-adminlte-red: #dc3545;
+  --color-adminlte-orange: #fd7e14;
+  --color-adminlte-yellow: #ffc107;
+  --color-adminlte-green: #28a745;
+  --color-adminlte-teal: #20c997;
+  --color-adminlte-cyan: #17a2b8;
+  --color-adminlte-white: #fff;
+  --color-adminlte-gray: #6c757d;
+  --color-adminlte-gray-dark: #343a40;
+  --color-adminlte-primary: #007bff;
+  --color-adminlte-secondary: #6c757d;
+  --color-adminlte-success: #28a745;
+  --color-adminlte-info: #17a2b8;
+  --color-adminlte-warning: #ffc107;
+  --color-adminlte-danger: #dc3545;
+  --color-adminlte-light: #f8f9fa;
+  --color-adminlte-dark: #343a40;
+  
+  --font-adminlte: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+@layer base {
+  body {
+    @apply font-adminlte bg-[#f4f6f9] text-[#212529];
+  }
+}
+
+@layer components {
+  .admin-card {
+    @apply bg-white rounded shadow-sm border-t-4 border-adminlte-primary mb-4;
+  }
+  
+  .admin-card-header {
+    @apply px-4 py-3 border-b border-gray-200 flex items-center justify-between font-semibold;
+  }
+  
+  .admin-card-body {
+    @apply p-4;
+  }
+}
+
+

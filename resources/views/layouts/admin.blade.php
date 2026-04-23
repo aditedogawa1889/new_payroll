@@ -8,37 +8,34 @@
     <title>{{ config('app.name', 'Laravel') }} - Admin</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
 </head>
-<body class="bg-gray-50 text-slate-900 antialiased">
+<body class="hold-transition sidebar-mini layout-fixed">
     
-    @include('layouts.partials.navbar')
-    @include('layouts.partials.sidebar')
+    <div class="wrapper min-h-screen flex flex-col">
+        @include('layouts.partials.navbar')
+        @include('layouts.partials.sidebar')
 
-    <div class="p-4 sm:ml-64 pt-20 min-h-screen flex flex-col">
-        <div class="flex-grow">
-            <!-- Page Header -->
-            @isset($header)
-                <div class="mb-6">
-                    {{ $header }}
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper sm:ml-64 flex-grow transition-all duration-300">
+            <!-- Content Header (Page header) -->
+            <div class="content-header px-4 py-4">
+                <div class="container-fluid">
+                    @isset($header)
+                        {{ $header }}
+                    @endisset
                 </div>
-            @endisset
+            </div>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <!-- Main content -->
+            <section class="content px-4 pb-12">
+                <div class="container-fluid">
+                    {{ $slot }}
+                </div>
+            </section>
         </div>
 
         @include('layouts.partials.footer')
