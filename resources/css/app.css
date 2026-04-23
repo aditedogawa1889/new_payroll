@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import "tailwindcss";
+
 @theme {
   --color-adminlte-blue: #007bff;
   --color-adminlte-indigo: #6610f2;
@@ -28,21 +30,41 @@
 
 @layer base {
   body {
-    @apply font-adminlte bg-[#f4f6f9] text-[#212529];
+    @apply font-adminlte bg-[#f4f6f9] text-[#212529] m-0 p-0 overflow-x-hidden;
   }
 }
 
 @layer components {
   .admin-card {
-    @apply bg-white rounded shadow-sm border-t-4 border-adminlte-primary mb-4;
+    @apply bg-white rounded shadow-sm border-t-4 border-adminlte-primary mb-6 transition-all duration-300;
   }
   
   .admin-card-header {
-    @apply px-4 py-3 border-b border-gray-200 flex items-center justify-between font-semibold;
+    @apply px-4 py-4 border-b border-gray-200 flex items-center justify-between font-bold text-gray-700;
   }
   
   .admin-card-body {
-    @apply p-4;
+    @apply p-5;
+  }
+
+  .small-box {
+    @apply rounded-lg shadow-md overflow-hidden relative mb-4 transition-transform duration-300 hover:scale-[1.02];
+  }
+
+  .small-box .inner {
+    @apply p-5 z-10 relative;
+  }
+
+  .small-box .icon {
+    @apply absolute top-2 right-4 text-black/10 transition-all duration-300 pointer-events-none z-0;
+  }
+
+  .small-box:hover .icon {
+    @apply scale-110 text-black/15;
+  }
+
+  .small-box-footer {
+    @apply block text-center bg-black/10 py-1.5 text-xs font-medium text-white/80 hover:bg-black/20 hover:text-white transition-colors relative z-20;
   }
 }
 
