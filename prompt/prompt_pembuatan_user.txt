@@ -1,0 +1,11 @@
+Buatkan issue.md berisi planing untuk membuat :
+
+proses CORS dilaravel yang akan dipakai saat koneksi dengan API.
+
+proses login dan logout (session)
+
+pemberian role dan permission user.
+
+user bisa reset password
+
+lalu design tampilan laravel seperti bootsrap Admin LTE 4 menggunakan tailwindcss 4
