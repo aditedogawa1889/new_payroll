@@ -7,36 +7,33 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-        
-        <style>
-            body { font-family: 'Inter', sans-serif; }
-        </style>
-    </head>
-    <body class="text-slate-900 antialiased bg-gray-100">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-            <div class="mb-8">
-                <a href="/" class="flex flex-col items-center">
-                    <div class="w-16 h-16 bg-blue-600 rounded-2xl shadow-lg flex items-center justify-center mb-4 transform hover:scale-110 transition-transform">
-                        <span class="text-white font-bold text-3xl">P</span>
-                    </div>
-                    <h1 class="text-2xl font-bold text-slate-800">Payroll System</h1>
-                    <p class="text-slate-500 text-sm">Sign in to start your session</p>
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="hold-transition login-page bg-gray-200">
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="login-box w-full max-w-md">
+            <div class="login-logo text-center mb-6">
+                <a href="/" class="text-3xl font-light text-gray-800">
+                    <span class="font-bold">Payroll</span>System
                 </a>
             </div>
-
-            <div class="w-full sm:max-w-md px-8 py-10 bg-white shadow-xl border border-gray-200 overflow-hidden sm:rounded-2xl">
-                {{ $slot }}
+            
+            <div class="card bg-white shadow-xl rounded-lg overflow-hidden border-t-4 border-adminlte-primary">
+                <div class="card-body p-8">
+                    <p class="login-box-msg text-center text-gray-600 mb-6 font-medium">Sign in to start your session</p>
+                    {{ $slot }}
+                </div>
             </div>
             
-            <p class="mt-8 text-gray-400 text-xs">© {{ date('Y') }} All Rights Reserved.</p>
+            <div class="text-center mt-8 text-gray-500 text-sm">
+                &copy; {{ date('Y') }} <a href="#" class="text-adminlte-primary hover:underline font-semibold">AdminLTE.io</a>. All rights reserved.
+            </div>
         </div>
-    </body>
+    </div>
+</body>
 </html>
 

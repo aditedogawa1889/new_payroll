@@ -7,44 +7,59 @@
 
     <title>{{ config('app.name', 'Laravel') }} - Admin</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.tailwindcss.css">
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+        .nav-icon { color: #4a7c44 !important; }
+        .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            color: #1a2e18 !important;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-slate-900 antialiased">
+<body class="hold-transition sidebar-mini layout-fixed">
     
-    @include('layouts.partials.navbar')
-    @include('layouts.partials.sidebar')
+    <div class="wrapper min-h-screen">
+        @include('layouts.partials.navbar')
+        @include('layouts.partials.sidebar')
 
-    <div class="p-4 sm:ml-64 pt-20 min-h-screen flex flex-col">
-        <div class="flex-grow">
-            <!-- Page Header -->
-            @isset($header)
-                <div class="mb-6">
-                    {{ $header }}
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper sm:ml-64 transition-all duration-300 pt-16 min-h-screen flex flex-col">
+            <!-- Content Header (Page header) -->
+            <div class="content-header px-6 py-6">
+                <div class="container-fluid">
+                    @isset($header)
+                        {{ $header }}
+                    @endisset
                 </div>
-            @endisset
+            </div>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
+            <!-- Main content -->
+            <section class="content px-6 pb-12 flex-grow">
+                <div class="container-fluid">
+                    {{ $slot }}
+                </div>
+            </section>
+
+            @include('layouts.partials.footer')
         </div>
-
-        @include('layouts.partials.footer')
     </div>
 
-    <!-- Flowbite or other JS if needed -->
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.tailwindcss.js"></script>
+
+    <!-- Flowbite -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+    @stack('scripts')
 </body>
 </html>

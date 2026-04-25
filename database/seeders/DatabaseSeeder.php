@@ -15,7 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(RoleAndPermissionSeeder::class);
+        $this->call([
+            RoleAndPermissionSeeder::class,
+            MenuSeeder::class,
+        ]);
 
         $admin = User::factory()->create([
             'name' => 'Admin Payroll',
@@ -23,7 +26,7 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('password'),
         ]);
 
-        $admin->assignRole('Admin');
+        $admin->assignRole('Admin Payroll');
 
         $user = User::factory()->create([
             'name' => 'Staff HR',

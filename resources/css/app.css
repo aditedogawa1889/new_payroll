@@ -1,2 +1,123 @@
 @import "tailwindcss";
 
+
+@theme {
+  --color-adminlte-blue: #007bff;
+  --color-adminlte-indigo: #6610f2;
+  --color-adminlte-purple: #6f42c1;
+  --color-adminlte-pink: #e83e8c;
+  --color-adminlte-red: #dc3545;
+  --color-adminlte-orange: #fd7e14;
+  --color-adminlte-yellow: #ffc107;
+  --color-adminlte-green: #28a745;
+  --color-adminlte-teal: #20c997;
+  --color-adminlte-cyan: #17a2b8;
+  --color-adminlte-white: #fff;
+  --color-adminlte-gray: #6c757d;
+  --color-adminlte-gray-dark: #343a40;
+  --color-adminlte-primary: #4a7c44;
+  --color-adminlte-secondary: #6c757d;
+  --color-adminlte-success: #28a745;
+  --color-adminlte-info: #17a2b8;
+  --color-adminlte-warning: #ffc107;
+  --color-adminlte-danger: #dc3545;
+  --color-adminlte-light: #f8f9fa;
+  --color-adminlte-dark: #343a40;
+
+  --font-adminlte: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+@layer base {
+  body {
+    @apply font-adminlte bg-[#f4f6f9] text-[#212529] m-0 p-0 overflow-x-hidden;
+  }
+}
+
+@layer components {
+  .admin-card {
+    @apply bg-white rounded shadow-sm border-t-4 border-adminlte-primary mb-6 transition-all duration-300;
+  }
+
+  .admin-card-header {
+    @apply px-4 py-4 border-b border-gray-200 flex items-center justify-between font-bold text-gray-800 bg-[#f0f9ef];
+  }
+
+  .admin-card-body {
+    @apply p-5;
+  }
+
+  .small-box {
+    @apply rounded-lg shadow-md overflow-hidden relative mb-4 transition-transform duration-300 hover:scale-[1.02];
+  }
+
+  .small-box .inner {
+    @apply p-5 z-10 relative;
+  }
+
+  .small-box .icon {
+    @apply absolute top-2 right-4 text-black/10 transition-all duration-300 pointer-events-none z-0;
+  }
+
+  .small-box:hover .icon {
+    @apply scale-110 text-black/15;
+  }
+
+  .small-box-footer {
+    @apply block text-center bg-black/10 py-1.5 text-xs font-medium text-white/80 hover:bg-black/20 hover:text-white transition-colors relative z-20;
+  }
+
+  .main-header {
+    height: 64px !important;
+  }
+
+  /* Premium DataTables Styling */
+  .dataTables_wrapper .dataTables_filter {
+    @apply mb-4;
+  }
+
+  .dataTables_wrapper .dataTables_filter input {
+    @apply border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-adminlte-primary focus:border-adminlte-primary outline-none transition-all duration-200 ml-2 bg-gray-50;
+    min-width: 250px;
+  }
+
+  .dataTables_wrapper .dataTables_length select {
+    @apply border border-gray-300 rounded-lg px-8 py-2 focus:ring-2 focus:ring-adminlte-primary focus:border-adminlte-primary outline-none transition-all duration-200 bg-gray-50;
+  }
+
+  .dataTables_wrapper .dataTables_info {
+    @apply mt-4 text-sm text-gray-500 font-medium;
+  }
+
+  .dataTables_wrapper .dataTables_paginate {
+    @apply mt-4 flex items-center space-x-1;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button {
+    @apply px-3 py-1.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-adminlte-primary cursor-pointer transition-all duration-200;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    @apply bg-adminlte-primary text-white border-adminlte-primary hover:bg-[#3d6638] !important;
+  }
+
+  .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+    @apply opacity-50 cursor-not-allowed grayscale;
+  }
+
+  table.dataTable {
+    @apply border-collapse !important;
+    border-spacing: 0;
+  }
+
+  table.dataTable thead th {
+    @apply border-b-2 border-gray-100 py-4 !important;
+  }
+
+  table.dataTable tbody td {
+    @apply py-4 !important;
+  }
+
+  table.dataTable.no-footer {
+    @apply border-b-0 !important;
+  }
+}

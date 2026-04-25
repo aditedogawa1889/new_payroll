@@ -1,0 +1,51 @@
+Buatkan issue.md berisi planing untuk membuat yaitu :
+
+buatkan saya skema CRUD untuk kontrol akses menu user berdasarkan permission dan role yang diberikan. 
+
+lalu buatkan table menu yang berisi : 
+- id_menu int auto increment primary key
+- nama_menu varchar(255)
+- uri varchar(max)
+- icon varchar(255)
+- is_parent int
+- parent_id int
+- order_menu int
+- show_menu int
+- is_active int 
+
+buatlah CRUD  untuk memasukan data ke dalam table menu ini. dan buat CRUD ini sebagai menu baru. 
+
+Lalu buatkan CRUD untuk mengatur akses menu dan manage user berdasarkan role dan permissionnya, buat table baru dan 
+relasikan table menu, table role dan table permission dengan table users. 
+
+dan berikan akses ke user "Admin Payroll" untuk bisa akses semua menu tersebut. 
+
+lalu ubah navbar menu mengikuti data pada table menu sesuai dengan akses yang diberikan pada user itu.
+
+
+tambahkan juga isi data pada table menu yaitu:
+- User Management (Dropdown)
+    - User Management
+    - Role and Permission
+    - Menus
+    
+- Employee (Dropdown)
+    - Data Employee
+    - Employee Loans
+    - Employee Assurance
+    - Tax Employee
+
+- Salary (Dropdown)
+    - Salary Components
+    - Salary Additional
+    - Salary Deduction
+    - Salary Setting 
+
+- Payroll (Dropdown)
+    - Attendance Employee
+    - Overtime Employee
+    - Payroll Calculation
+    - Payroll History
+
+dan semua menu diatas bisa di akses oleh user "Admin Payroll
+

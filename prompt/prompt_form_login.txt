@@ -1,6 +1,0 @@
-Buatkan issue.md berisi planing untuk membuat :
-
-perubahan tampilan design aplikasi mengikuti design dan tampilan
-dari https://adminlte.io/themes/v3/#
-
-lalu 

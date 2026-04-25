@@ -1,0 +1,10 @@
+Buatkan issue.md berisi planing untuk membuat :
+
+perubahan tampilan design aplikasi mengikuti design dan tampilan
+dari https://adminlte.io/themes/v3/#
+
+lalu pada default url http://localhost/new_payroll/public/ arahkan langsung ke dalam form login.
+
+rapihkan tampilan design aplikasi agar tidak numpuk dan warna lebih menarik.
+
+buat langkah-langkah dengan lebih detail akan tetapi jangan terlalu low level.
