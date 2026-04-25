@@ -68,7 +68,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <!-- Left col -->
         <div class="admin-card">
-            <div class="admin-card-header bg-gray-50">
+            <div class="admin-card-header">
                 <div class="flex items-center">
                     <svg class="w-4 h-4 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"></path></svg>
                     <span>Sales Overview</span>
@@ -86,7 +86,7 @@
 
         <!-- Right col -->
         <div class="admin-card border-t-4 border-adminlte-success">
-            <div class="admin-card-header bg-gray-50">
+            <div class="admin-card-header">
                 <div class="flex items-center">
                     <svg class="w-4 h-4 mr-2 text-gray-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
                     <span>Recent Notifications</span>

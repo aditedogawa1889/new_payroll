@@ -1,0 +1,25 @@
+Buatkan issue.md berisi planing untuk membuat yaitu :
+
+Table Master Komponen gaji dengan field:
+- id_komponen int auto increment primary key
+- nama_komponen varchar(255)
+- jenis_komponen varchar(50)
+- is_potongan boolean
+- is_tunjangan boolean 
+- status varchar(50)
+- created_by varchar(255)
+- created_at datetime
+- updated_by varchar(255)
+- updated_at datetime
+
+Table integrasi data karyawan dari sistem HRIS dengan field:
+- id_integrasi auto increment primary key
+- employee_id varchar(255)
+- integ_type varchar(50)
+- integ_status int
+- integ_source varchar(255)
+- integ_date datetime
+- created_by varchar(255)
+- created_at datetime
+- updated_by varchar(255)
+- updated_at datetime

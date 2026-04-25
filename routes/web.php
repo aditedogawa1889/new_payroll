@@ -15,6 +15,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Admin Routes
+    Route::prefix('admin')->group(function () {
+        Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);
+        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
+        Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    });
 });
 
 require __DIR__.'/auth.php';

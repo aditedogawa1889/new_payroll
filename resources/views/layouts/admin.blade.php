@@ -7,11 +7,22 @@
 
     <title>{{ config('app.name', 'Laravel') }} - Admin</title>
 
-    <!-- Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.3/css/dataTables.tailwindcss.css">
+
+    <style>
+        .nav-icon { color: #4a7c44 !important; }
+        .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            color: #1a2e18 !important;
+        }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
     
@@ -41,7 +52,14 @@
         </div>
     </div>
 
-    <!-- Flowbite or other JS if needed -->
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.js"></script>
+    <script src="https://cdn.datatables.net/2.0.3/js/dataTables.tailwindcss.js"></script>
+
+    <!-- Flowbite -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+
+    @stack('scripts')
 </body>
 </html>
