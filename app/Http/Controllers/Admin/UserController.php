@@ -3,98 +3,116 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Menu;
+use App\Models\Permission;
 use App\Models\User;
+use App\Models\UsersMenu;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['roles', 'permissions'])->get();
-        return view('admin.users.index', compact('users'));
+        $users = User::with('usersMenu')->get();
+        $permissions = Permission::all()->keyBy('id');
+        return view('admin.users.index', compact('users', 'permissions'));
     }
 
     public function create()
     {
-        $roles = Role::all();
-        $menus = \App\Models\Menu::with(['submenus.permission', 'permission'])
-            ->whereNull('parent_id')
+        $permissions = Permission::all();
+        $menus = Menu::where('is_parent', 1)
+            ->with(['submenus' => function ($q) {
+                $q->orderBy('order_menu');
+            }])
             ->orderBy('order_menu')
             ->get();
-        return view('admin.users.create', compact('roles', 'menus'));
+        return view('admin.users.create', compact('permissions', 'menus'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'password'      => Hash::make($request->password),
+            'id_permission' => $request->input('id_permission', []),
         ]);
 
-        if ($request->has('roles')) {
-            $user->syncRoles($request->roles);
-        }
+        // Simpan akses menu (hanya child menus)
+        $menuIds = $request->input('menu_ids', []);
+        // Filter: pastikan hanya child menus (is_parent = 0)
+        $validMenuIds = Menu::whereIn('id_menu', $menuIds)
+            ->where('is_parent', 0)
+            ->pluck('id_menu')
+            ->toArray();
 
-        if ($request->has('permissions')) {
-            $user->syncPermissions($request->permissions);
-        }
+        UsersMenu::create([
+            'id_user'    => $user->id,
+            'id_menus'   => array_values($validMenuIds),
+            'created_by' => auth()->user()->name,
+            'updated_by' => auth()->user()->name,
+        ]);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
     public function edit(User $user)
     {
-        $roles = Role::all();
-        $menus = \App\Models\Menu::with(['submenus.permission', 'permission'])
-            ->whereNull('parent_id')
+        $permissions = Permission::all();
+        $menus = Menu::where('is_parent', 1)
+            ->with(['submenus' => function ($q) {
+                $q->orderBy('order_menu');
+            }])
             ->orderBy('order_menu')
             ->get();
-            
-        $userRoles = $user->roles->pluck('name')->toArray();
-        $userPermissions = $user->permissions->pluck('name')->toArray();
-        
-        return view('admin.users.edit', compact('user', 'roles', 'menus', 'userRoles', 'userPermissions'));
+
+        $userPermissions = $user->id_permission ?? [];
+        $userMenuIds     = $user->usersMenu?->id_menus ?? [];
+
+        return view('admin.users.edit', compact('user', 'permissions', 'menus', 'userPermissions', 'userMenuIds'));
     }
 
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,'.$user->id],
+            'name'  => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        
+        $user->name          = $request->name;
+        $user->email         = $request->email;
+        $user->id_permission = $request->input('id_permission', []);
+
         if ($request->password) {
             $user->password = Hash::make($request->password);
         }
-        
+
         $user->save();
 
-        if ($request->has('roles')) {
-            $user->syncRoles($request->roles);
-        } else {
-            $user->syncRoles([]);
-        }
+        // Update akses menu
+        $menuIds = $request->input('menu_ids', []);
+        $validMenuIds = Menu::whereIn('id_menu', $menuIds)
+            ->where('is_parent', 0)
+            ->pluck('id_menu')
+            ->toArray();
 
-        if ($request->has('permissions')) {
-            $user->syncPermissions($request->permissions);
-        } else {
-            $user->syncPermissions([]);
-        }
+        UsersMenu::updateOrCreate(
+            ['id_user' => $user->id],
+            [
+                'id_menus'   => array_values($validMenuIds),
+                'updated_by' => auth()->user()->name,
+            ]
+        );
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
@@ -104,8 +122,10 @@ class UserController extends Controller
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')->with('error', 'You cannot delete yourself.');
         }
-        
+
+        $user->usersMenu?->delete();
         $user->delete();
+
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }
 }

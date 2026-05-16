@@ -11,7 +11,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar px-0 py-0 overflow-y-auto h-[calc(100vh-64px)]">
-        <!-- Sidebar user panel (optional) -->
+        <!-- Sidebar user panel -->
         <div class="user-panel mt-3 pb-3 mb-3 flex items-center px-4 border-b border-gray-100">
             <div class="image mr-3">
                 <div class="w-8 h-8 rounded-full bg-[#4a7c44] flex items-center justify-center text-white elevation-2 text-xs font-bold">
@@ -32,41 +32,34 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
-                
-                <!-- Dynamic Sidebar Menu -->
+
                 @foreach($sidebarMenus as $menu)
-                    @if($menu->is_parent)
-                        <li class="nav-item has-treeview" x-data="{ open: {{ collect($menu->submenus)->pluck('uri')->contains(request()->route()->getName()) ? 'true' : 'false' }} }">
-                            <a href="#" @click.prevent="open = !open" class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors group text-gray-700" :class="{ 'bg-black/5 text-gray-900 font-bold': open }">
-                                <i class="nav-icon {{ $menu->icon ?? 'fas fa-circle' }} w-5 h-5 mr-3"></i>
-                                <p class="flex-1">
-                                    {{ $menu->nama_menu }}
-                                    <i class="right fas fa-angle-left ml-auto transition-transform" :class="{ '-rotate-90': open }"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview ml-4 mt-1 space-y-1" x-show="open" x-transition>
-                                @foreach($menu->submenus as $submenu)
-                                    <li class="nav-item">
-                                        <a href="{{ Route::has($submenu->uri) ? route($submenu->uri) : '#' }}" class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors {{ request()->routeIs($submenu->uri) ? 'bg-white/50 text-gray-900 font-bold shadow-sm' : 'text-gray-600' }}">
-                                            <i class="{{ $submenu->icon ?? 'far fa-circle' }} nav-icon w-4 h-4 mr-3 text-xs"></i>
-                                            <p class="text-sm">{{ $submenu->nama_menu }}</p>
-                                        </a>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </li>
-                    @else
-                        <li class="nav-item">
-                            <a href="{{ Route::has($menu->uri) ? route($menu->uri) : '#' }}" class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors {{ request()->routeIs($menu->uri) ? 'bg-white/50 text-gray-900 font-bold shadow-sm' : 'text-gray-700' }}">
-                                <i class="nav-icon {{ $menu->icon ?? 'fas fa-circle' }} w-5 h-5 mr-3"></i>
-                                <p>{{ $menu->nama_menu }}</p>
-                            </a>
-                        </li>
-                    @endif
+                    <li class="nav-item has-treeview" x-data="{ open: {{ $menu->submenus->contains(fn($s) => request()->routeIs($s->url_menu)) ? 'true' : 'false' }} }">
+                        <a href="javascript:void(0)" @click.prevent="open = !open"
+                           class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors group text-gray-700"
+                           :class="{ 'bg-black/5 text-gray-900 font-bold': open }">
+                            <i class="nav-icon {{ $menu->icon_menu ?? 'fas fa-circle' }} w-5 h-5 mr-3"></i>
+                            <p class="flex-1">
+                                {{ $menu->nama_menu }}
+                                <i class="right fas fa-angle-left ml-auto transition-transform" :class="{ '-rotate-90': open }"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview ml-4 mt-1 space-y-1" x-show="open" x-transition>
+                            @foreach($menu->submenus as $submenu)
+                                <li class="nav-item">
+                                    <a href="{{ Route::has($submenu->url_menu) ? route($submenu->url_menu) : '#' }}"
+                                       class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors {{ request()->routeIs($submenu->url_menu) ? 'bg-white/50 text-gray-900 font-bold shadow-sm' : 'text-gray-600' }}">
+                                        <i class="{{ $submenu->icon_menu ?? 'far fa-circle' }} nav-icon w-4 h-4 mr-3 text-xs"></i>
+                                        <p class="text-sm">{{ $submenu->nama_menu }}</p>
+                                    </a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
                 @endforeach
 
                 <li class="nav-header text-xs uppercase font-bold text-gray-400 mt-4 mb-2 px-2">SETTINGS</li>
-                
+
                 <li class="nav-item">
                     <a href="{{ route('profile.edit') }}" class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors {{ request()->routeIs('profile.edit') ? 'bg-white/50 text-gray-900 font-bold active' : 'text-gray-700' }}">
                         <i class="nav-icon fas fa-user-cog w-5 h-5 mr-3 flex items-center justify-center"></i>
@@ -87,4 +80,3 @@
         </nav>
     </div>
 </aside>
-
