@@ -10,38 +10,31 @@ class SidebarComposer
 {
     /**
      * Bind data to the view.
+     * Menu yang ditampilkan diambil dari tabel users_menus berdasarkan user yang login.
      */
     public function compose(View $view): void
     {
         $user = Auth::user();
         if (!$user) {
+            $view->with('sidebarMenus', collect());
             return;
         }
 
-        // Fetch top-level menus with submenus and their permissions
-        $menus = Menu::with(['submenus', 'permission'])
-            ->where('is_active', 1)
+        // Ambil ID menu yang diperbolehkan untuk user ini (hanya child menus)
+        $userMenuIds = $user->getMenuIds();
+
+        // Ambil parent menus yang punya setidaknya satu child yang diizinkan
+        $sidebarMenus = Menu::where('is_parent', 1)
             ->where('show_menu', 1)
-            ->whereNull('parent_id')
+            ->with(['submenus' => function ($q) use ($userMenuIds) {
+                $q->where('show_menu', 1)
+                  ->whereIn('id_menu', $userMenuIds)
+                  ->orderBy('order_menu');
+            }])
             ->orderBy('order_menu')
-            ->get();
+            ->get()
+            ->filter(fn($menu) => $menu->submenus->count() > 0);
 
-        // Filter menus based on user permissions
-        $filteredMenus = $menus->filter(function ($menu) use ($user) {
-            // If it's a parent, check if any of its submenus are accessible
-            if ($menu->is_parent) {
-                $menu->setRelation('submenus', $menu->submenus->filter(function ($submenu) use ($user) {
-                    $permission = $submenu->permission;
-                    return !$permission || $user->can($permission->name);
-                }));
-                return $menu->submenus->count() > 0;
-            }
-
-            // If it's a single menu, check its permission
-            $permission = $menu->permission;
-            return !$permission || $user->can($permission->name);
-        });
-
-        $view->with('sidebarMenus', $filteredMenus);
+        $view->with('sidebarMenus', $sidebarMenus);
     }
 }

@@ -13,14 +13,12 @@ class Menu extends Model
 
     protected $fillable = [
         'nama_menu',
-        'uri',
-        'icon',
-        'is_parent',
+        'url_menu',
+        'icon_menu',
         'parent_id',
         'order_menu',
+        'is_parent',
         'show_menu',
-        'is_active',
-        'permission_id',
     ];
 
     /**
@@ -28,7 +26,7 @@ class Menu extends Model
      */
     public function submenus(): HasMany
     {
-        return $this->hasMany(Menu::class, 'parent_id', 'id_menu')->orderBy('order_menu');
+        return $this->hasMany(Menu::class, 'parent_id', 'id_menu');
     }
 
     /**
@@ -37,13 +35,5 @@ class Menu extends Model
     public function parent(): BelongsTo
     {
         return $this->belongsTo(Menu::class, 'parent_id', 'id_menu');
-    }
-
-    /**
-     * Get the permission associated with the menu.
-     */
-    public function permission(): BelongsTo
-    {
-        return $this->belongsTo(\Spatie\Permission\Models\Permission::class, 'permission_id');
     }
 }

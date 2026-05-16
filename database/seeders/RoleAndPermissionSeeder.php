@@ -22,11 +22,12 @@ class RoleAndPermissionSeeder extends Seeder
         Permission::create(['name' => 'calculate payroll']);
         Permission::create(['name' => 'view payslip']);
         Permission::create(['name' => 'manage roles']);
+        Permission::create(['name' => 'push integration']);
 
         // create roles and assign created permissions
 
         // Admin role
-        $role = Role::create(['name' => 'Admin']);
+        $role = Role::create(['name' => 'Admin Payroll']);
         $role->givePermissionTo(Permission::all());
 
         // HR role
@@ -36,5 +37,9 @@ class RoleAndPermissionSeeder extends Seeder
         // Employee role
         $role = Role::create(['name' => 'Employee']);
         $role->givePermissionTo(['view payslip']);
+
+        // HRIS Integration role
+        $role = Role::create(['name' => 'hris-integration']);
+        $role->givePermissionTo(['push integration']);
     }
 }
