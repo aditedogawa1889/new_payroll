@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware('menu.access')->prefix('admin')->group(function () {
         Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::resource('employees', \App\Http\Controllers\Admin\EmployeeController::class);
     });
 });
 

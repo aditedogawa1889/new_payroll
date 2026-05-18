@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreHrisIntegrationRequest;
 use App\Models\EmployeeIntegration;
+use App\Models\MasterIntegrationType;
 use Illuminate\Http\JsonResponse;
 
 class HrisIntegrationController extends Controller
@@ -23,5 +24,11 @@ class HrisIntegrationController extends Controller
             'message' => 'Integration stored',
             'integration_id' => $integration->id_integration,
         ], 201);
+    }
+
+    public function getTypes(): JsonResponse
+    {
+        $types = MasterIntegrationType::where('is_active', 1)->get();
+        return response()->json($types);
     }
 }

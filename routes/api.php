@@ -8,6 +8,7 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::middleware(['auth:sanctum', 'role:hris-integration', 'throttle:60,1'])->group(function () {
+Route::middleware(['auth:sanctum', 'throttle:60,1'])->group(function () {
+    Route::get('/hris/types', [HrisIntegrationController::class, 'getTypes']);
     Route::post('/hris/integrations', [HrisIntegrationController::class, 'store']);
 });

@@ -14,10 +14,12 @@ return new class extends Migration
             $table->string('employee_name', 255)->nullable();
             $table->string('email', 255)->nullable();
             $table->date('join_date')->nullable();
-            $table->integer('location_current_year')->nullable();
-            $table->integer('location_future_year')->nullable();
-            $table->integer('effective_location_year')->nullable();
+            $table->string('location_current_year', 255)->nullable();
+            $table->string('location_future_year', 255)->nullable();
+            $table->string('effective_location_year', 4)->nullable();
             $table->date('effective_location_date')->nullable();
+            $table->date('termination_date')->nullable();
+            $table->date('last_payroll_date')->nullable();
             $table->string('job_level', 255)->nullable();
             $table->string('job_title', 255)->nullable();
             $table->string('npwp', 255)->nullable();
