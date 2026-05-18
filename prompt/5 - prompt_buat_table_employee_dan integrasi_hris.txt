@@ -1,0 +1,72 @@
+Buatkan file issue.md berisi planing untuk membuat yaitu :
+
+table-table untuk integrasi employee dari HRIS ke payroll dengan struktur table seperti ini:
+
+table master tipe integrasi:
+- id_integ_type int auto increment primary key
+- description varchar(255)
+- is_active int
+
+isi table master tipe integrasi dengan data:
+- New Employee
+- Update Employee 
+- Termination Employee
+- Promotion Employee
+- Demotion Employee
+- Mutation Employee
+
+table data integrasi employee:
+- id_integration int auto increment primary key
+- id_integ_type int (FK) dari table master tipe integrasi
+- emp_number bigint
+- employee_id varchar(255)
+- job_title_id int
+- job_title_future_id int
+- join_date
+- location_from_id 
+- location_to_id
+- effective_date
+- is_processed int
+- created_by
+- create_at
+- updated_by
+- updated_at
+
+table employee:
+- emp_number bigint unique key
+- employee_id varchar(255)
+- employee_name varchar(255)
+- email varchar(255)
+- join_date date
+- location_current_year int
+- location_future_year int
+- effective_location_year int
+- effective_location_date date
+- Job Level varchar(255)
+- Job Title varchar(255)
+- NPWP varchar(255)
+- BPJS Kesehatan varchar(255)
+- BPJS Ketenagakerjaan varchar(255)
+- KTP varchar(255)
+- Gender varchar(50)
+- Bank Account varchar(255)
+- Bank Name varchar(255)
+- Bank Account Name varchar(255) 
+- created_by
+- create_at
+- updated_by
+- updated_at
+
+Buatkan juga API yang nantinya API ini akan di hit oleh system HRIS
+memasukan data ke table integrasi
+
+dengan parameter:
+- id_integ_type int
+- emp_number bigint
+- employee_id varchar(255)
+- job_title_id int
+- job_title_future_id int
+- join_date
+- location_from_id 
+- location_to_id
+- effective_date

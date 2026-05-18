@@ -1,0 +1,51 @@
+Buatkan issue.md berisi planing untuk membuat yaitu :
+
+1. hapus table roles
+2. ubah table permission menjadi :
+   - id (PK) int
+   - description varchar(255)
+   - created_at datetime
+   - updated_at datetime
+
+   Masukan data permission sebagai berikut:
+   0, External Agent
+   99, Admin IT Pusat
+   1, Admin Payroll
+   11, Manager Payroll
+
+   created_at dan updated_at menyesuaikan.
+
+3. ubah table menu menjadi:
+    id_menu int auto increment primary key
+    nama_menu varchar(255)
+    url_menu varchar(255) 
+    icon_menu varchar(255)
+    parent_id int
+    order_menu int
+    is_parent int
+    show_menu int
+    created_at datetime
+    updated_at datetime
+
+    untuk url_menu diisi dengan route yang ada di web.php jika dia 
+    adalah parent atau sub parent isi dengan javascript:void(0)
+
+4. buat table users_menus dengan field:
+    id_users_menus int auto increment primary key
+    id_user int
+    id_menus text
+    created_by varchar(255)
+    created_at datetime
+    updated_by varchar(255)
+    updated_at datetime
+    
+    untuk id_menus diisi dengan format json array contoh : [1,2,3] 
+    dan hanya diisi dengan child menus saja.
+    
+5. tambahkan field pada kolom user, untuk relasi dengan table permission, dimana 
+   tambahkan dengan nama kolom id_permission type text, contoh: [1,2,3] berisi 
+   id permission yang diizinkan untuk user tersebut.
+
+   ubah alur flow dan sesuaikan dengan struktur user dan menu-menu yang sudah ada saat ini. ubah juga user managemment yang ada saat ini mengikuti struktur yang baru diatas. 
+
+   lakukan perubahan secara menyeluruh ya.

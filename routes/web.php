@@ -17,10 +17,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Admin Routes
-    Route::prefix('admin')->group(function () {
+    Route::middleware('menu.access')->prefix('admin')->group(function () {
         Route::resource('menus', \App\Http\Controllers\Admin\MenuController::class);
-        Route::resource('roles', \App\Http\Controllers\Admin\RoleController::class);
         Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+        Route::resource('employees', \App\Http\Controllers\Admin\EmployeeController::class);
     });
 });
 
