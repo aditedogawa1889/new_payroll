@@ -18,10 +18,10 @@
         <div class="login-box w-full max-w-md">
             <div class="login-logo text-center mb-6 flex flex-col items-center">
                 <a href="/">
-                    <img src="{{ asset('images/metland_logo.png') }}" alt="Metland Logo" class="h-16 mx-auto mb-2">
+                    <img src="{{ asset('images/metland_logo.png') }}" alt="Metland Logo" class="h-10 object-contain mx-auto mb-3">
                 </a>
                 <a href="/" class="text-3xl font-light text-gray-800">
-                    <span class="font-bold">Metland</span> System Payroll
+                    System Payroll
                 </a>
             </div>
             
