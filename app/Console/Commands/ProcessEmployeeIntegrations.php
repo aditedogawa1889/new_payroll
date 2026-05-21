@@ -77,10 +77,12 @@ class ProcessEmployeeIntegrations extends Command
                     ['emp_number' => $data->emp_number],
                     [
                         'employee_id' => $data->employee_id,
+                        'employee_name' => $data->employee_name,
                         'join_date' => $data->join_date,
                         'location_current_year' => $data->location_from_name,
                         'location_future_year' => $data->location_to_name,
                         'job_title' => $data->job_title_name,
+                        'job_level' => $data->job_level,
                         'effective_location_date' => $data->job_title_effective_date,
                         'effective_location_year' => $data->effective_year,
                         'created_by' => 'HRIS Integration',
