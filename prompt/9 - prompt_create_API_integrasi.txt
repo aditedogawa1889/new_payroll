@@ -1,0 +1,21 @@
+Buatkan issue.md berisi planing untuk membuat yaitu :
+
+1. buat API untuk get data type integrasi dari table master_integration_types
+2. buat API untuk post data ke table employee_integrations
+3. buat script cron untuk memproses data yang ada ke table employee_integrations
+   berdasarkan master_integration_types.
+
+   jika integration_type == "new employee" maka insert data ke table employee
+   jika integration_type == "update employee" maka update data ke table employee
+   jika integration_type == "termination employee" maka update data ke table employee lalu, masukan juga datanya ke table termination_employees.
+   jika integration_type == "promotion employee" maka update data ke table employee lalu, masukan juga ke table promotion_employees.
+   jika integration_type == "demotion employee" maka update data ke table employee lalu, masukan juga ke table demotion_employees.
+   jika integration_type == "mutation employee" maka update data ke table employee lalu, masukan juga ke table mutation_employees.
+
+
+   Buatkan juga data Employee, dan bisa diliat history promosi, mutasi, demosi dan lain-lain dalam 1 module Data Employee
+
+
+   Buatlah collection.json yang bisa dipakai untuk proses testing di postman dari proses nomor 1 dan 2 diatas.
+   letakan file collection.json tersebut di folder prompt, dengan nama collection_integration_employee.json
+   

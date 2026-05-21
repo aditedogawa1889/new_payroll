@@ -24,14 +24,19 @@
         }
     </style>
 </head>
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini layout-fixed overflow-x-hidden" 
+      x-data="{ 
+          sidebarOpen: localStorage.getItem('sidebarOpen') !== null ? localStorage.getItem('sidebarOpen') === 'true' : window.innerWidth > 640, 
+          isHovered: false 
+      }" 
+      x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
     
     <div class="wrapper min-h-screen">
         @include('layouts.partials.navbar')
         @include('layouts.partials.sidebar')
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper sm:ml-64 transition-all duration-300 pt-16 min-h-screen flex flex-col">
+        <div class="content-wrapper transition-all duration-300 pt-16 min-h-screen flex flex-col" :class="sidebarOpen ? 'sm:ml-64' : 'sm:ml-16 ml-0'">
             <!-- Content Header (Page header) -->
             <div class="content-header px-6 py-6">
                 <div class="container-fluid">

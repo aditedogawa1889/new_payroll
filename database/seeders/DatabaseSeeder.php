@@ -17,7 +17,11 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             MenuSeeder::class,
+            PermissionSeeder::class,
+            RoleSeeder::class,
+            AdminUserSeeder::class,
             MasterIntegrationTypeSeeder::class,
+            MdTypeKomponenSeeder::class,
         ]);
 
         // Ambil semua child menu IDs

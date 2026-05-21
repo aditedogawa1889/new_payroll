@@ -23,6 +23,8 @@ class Employee extends Model
         'location_future_year',
         'effective_location_year',
         'effective_location_date',
+        'termination_date',
+        'last_payroll_date',
         'job_level',
         'job_title',
         'npwp',
@@ -36,4 +38,24 @@ class Employee extends Model
         'created_by',
         'updated_by',
     ];
+
+    public function terminations()
+    {
+        return $this->hasMany(TerminationEmployee::class, 'emp_number', 'emp_number');
+    }
+
+    public function promotions()
+    {
+        return $this->hasMany(PromotionEmployee::class, 'emp_number', 'emp_number');
+    }
+
+    public function demotions()
+    {
+        return $this->hasMany(DemotionEmployee::class, 'emp_number', 'emp_number');
+    }
+
+    public function mutations()
+    {
+        return $this->hasMany(MutationEmployee::class, 'emp_number', 'emp_number');
+    }
 }

@@ -1,0 +1,208 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-1234-56789abcdef0",
+		"name": "HRIS to Payroll Integration v2",
+		"description": "API endpoints for integrating Employee data from external HRIS to Payroll System.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Get Integration Types",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/api/hris/types",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"hris",
+						"types"
+					]
+				},
+				"description": "Mengambil daftar tipe integrasi yang didukung dari tabel master_integration_types."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Post New Employee",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_integ_type\": 1,\r\n    \"emp_number\": 2026001,\r\n    \"employee_id\": \"EMP-2026-001\",\r\n    \"job_title_name\": \"Junior Developer\",\r\n    \"job_title_future_name\": null,\r\n    \"job_title_effective_date\": \"2026-01-01\",\r\n    \"join_date\": \"2026-01-01\",\r\n    \"location_from_name\": \"Head Office\",\r\n    \"location_to_name\": \"Head Office\",\r\n    \"effective_year\": \"2026\",\r\n    \"termination_date\": null,\r\n    \"last_payroll_date\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/hris/integrations",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"hris",
+						"integrations"
+					]
+				},
+				"description": "Mendaftarkan karyawan baru ke sistem."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Post Promotion",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_integ_type\": 4,\r\n    \"emp_number\": 2026001,\r\n    \"employee_id\": \"EMP-2026-001\",\r\n    \"job_title_name\": \"Junior Developer\",\r\n    \"job_title_future_name\": \"Software Engineer\",\r\n    \"job_title_effective_date\": \"2026-06-01\",\r\n    \"join_date\": \"2026-01-01\",\r\n    \"location_from_name\": \"Head Office\",\r\n    \"location_to_name\": \"Head Office\",\r\n    \"effective_year\": \"2026\",\r\n    \"termination_date\": null,\r\n    \"last_payroll_date\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/hris/integrations",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"hris",
+						"integrations"
+					]
+				},
+				"description": "Mempromosikan karyawan."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Post Termination",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id_integ_type\": 3,\r\n    \"emp_number\": 2026001,\r\n    \"employee_id\": \"EMP-2026-001\",\r\n    \"job_title_name\": \"Software Engineer\",\r\n    \"job_title_future_name\": null,\r\n    \"job_title_effective_date\": \"2026-12-31\",\r\n    \"join_date\": \"2026-01-01\",\r\n    \"location_from_name\": \"Head Office\",\r\n    \"location_to_name\": \"Head Office\",\r\n    \"effective_year\": \"2026\",\r\n    \"termination_date\": \"2026-12-31\",\r\n    \"last_payroll_date\": \"2026-12-25\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/api/hris/integrations",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"hris",
+						"integrations"
+					]
+				},
+				"description": "Mengakhiri masa kerja karyawan."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost/new_payroll/public",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "your_sanctum_token_here",
+			"type": "string"
+		}
+	]
+}
