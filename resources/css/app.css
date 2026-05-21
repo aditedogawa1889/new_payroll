@@ -97,7 +97,7 @@
   }
 
   .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-    @apply bg-adminlte-primary text-white border-adminlte-primary hover:bg-[#3d6638] !important;
+    @apply !bg-adminlte-primary !text-white !border-adminlte-primary hover:!bg-[#3d6638];
   }
 
   .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
@@ -105,19 +105,19 @@
   }
 
   table.dataTable {
-    @apply border-collapse !important;
+    @apply !border-collapse;
     border-spacing: 0;
   }
 
   table.dataTable thead th {
-    @apply border-b-2 border-gray-100 py-4 !important;
+    @apply !border-b-2 !border-gray-100 !py-4;
   }
 
   table.dataTable tbody td {
-    @apply py-4 !important;
+    @apply !py-4;
   }
 
   table.dataTable.no-footer {
-    @apply border-b-0 !important;
+    @apply !border-b-0;
   }
 }
