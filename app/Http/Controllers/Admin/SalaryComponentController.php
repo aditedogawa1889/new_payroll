@@ -63,7 +63,7 @@ class SalaryComponentController extends Controller
 
     public function destroy(MdComponentPayroll $salary_component)
     {
-        $salary_component->delete();
+        $salary_component->update(['is_delete' => 1]);
         return redirect()->route('salary-components.index')->with('success', 'Component deleted successfully.');
     }
 }

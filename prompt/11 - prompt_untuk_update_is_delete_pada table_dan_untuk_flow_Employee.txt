@@ -1,0 +1,13 @@
+Buatkan issue.md berisi planing untuk membuat yaitu:
+
+1. Buat kolom baru pada kolom md_component_payroll yaitu kolom is_delete,
+    buat default value 0 pada kolom is_delete. lalu ketika module delete 
+    dihits oleh module Salary Component maka pada kolom is_delete di md_component_payroll 
+    akan di update menjadi 1.
+
+2. pada module Salary Setting, dibuat filter seperti yang dibuat di module Data Employee
+
+3. pada table employees tambahkan kolom is_set_salary dan buat default value 0 pada kolom
+    is_set_salary. lalu ketika is_set_salary = 0, maka pada module Salary Setting dibuat muncul 
+    secara default tanpa perlu difilter. saat employee tersebut di set salary pada module salary 
+    setting, maka kolom is_set_salary akan di update menjadi 1.

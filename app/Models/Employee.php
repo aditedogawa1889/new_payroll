@@ -12,6 +12,12 @@ class Employee extends Model
     protected $primaryKey = 'emp_number';
     public $incrementing = false;
     protected $keyType = 'integer';
+    protected static function booted()
+    {
+        static::addGlobalScope('not_deleted', function ($builder) {
+            $builder->where('is_delete', 0);
+        });
+    }
 
     protected $fillable = [
         'emp_number',
@@ -35,6 +41,8 @@ class Employee extends Model
         'bank_account',
         'bank_name',
         'bank_account_name',
+        'is_delete',
+        'is_set_salary',
         'created_by',
         'updated_by',
     ];

@@ -14,12 +14,20 @@ class MdComponentPayroll extends Model
 
     protected $with = ['parameter'];
 
+    protected static function booted()
+    {
+        static::addGlobalScope('not_deleted', function ($builder) {
+            $builder->where('is_delete', 0);
+        });
+    }
+
     protected $fillable = [
         'nama_component',
         'id_type_component',
         'id_param_component',
         'component_parameter',
         'is_active',
+        'is_delete',
         'created_by',
         'updated_by'
     ];
