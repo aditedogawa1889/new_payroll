@@ -136,10 +136,11 @@
                 document.cookie = `longitude=${lng}; path=/; max-age=31536000; SameSite=Lax`;
 
                 // Try to get local IP and store in cookie
-                const localIp = await getLocalIPAddress();
-                if (localIp) {
-                    document.cookie = `ip_local=${localIp}; path=/; max-age=31536000; SameSite=Lax`;
+                let localIp = await getLocalIPAddress();
+                if (!localIp) {
+                    localIp = window.location.hostname || '127.0.0.1';
                 }
+                document.cookie = `ip_local=${localIp}; path=/; max-age=31536000; SameSite=Lax`;
 
                 hideGeolocationBlocker();
                 window.location.reload();
