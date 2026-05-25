@@ -25,7 +25,7 @@
                 <div class="card-header bg-white border-b border-gray-100 py-4">
                     <h3 class="card-title text-gray-700 font-semibold">Component Values</h3>
                 </div>
-                <form action="{{ route('salary-settings.update', $employee->emp_number) }}" method="POST">
+                <form id="salary-settings-form" action="{{ route('salary-settings.update', $employee->emp_number) }}" method="POST">
                     @csrf
                     @method('PUT')
                     
@@ -680,7 +680,7 @@
             });
 
             // Remove formatting before form submission
-            const form = document.querySelector('form');
+            const form = document.getElementById('salary-settings-form');
             if (form) {
                 form.addEventListener('submit', function() {
                     document.querySelectorAll('.thousands-separator').forEach(input => {
