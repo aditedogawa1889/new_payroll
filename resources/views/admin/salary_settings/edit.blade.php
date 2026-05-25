@@ -125,14 +125,9 @@
                                                     <!-- Readonly Calculation Result -->
                                                     <div class="mt-3">
                                                         <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Hasil Kalkulasi Rumus</label>
-                                                        <div class="relative font-semibold">
-                                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                                <span class="text-gray-500 sm:text-sm">Rp</span>
-                                                            </div>
-                                                            <input type="text" id="calc-result-{{ $component->id_component }}" readonly
-                                                                   class="w-full pl-9 rounded-md border-gray-200 bg-gray-100/70 shadow-sm text-gray-700 sm:text-sm font-semibold select-none cursor-not-allowed calc-result-field"
-                                                                   value="0">
-                                                        </div>
+                                                        <input type="text" id="calc-result-{{ $component->id_component }}" readonly
+                                                               class="w-full rounded-md border-gray-200 bg-gray-100/70 shadow-sm text-gray-700 sm:text-sm font-semibold select-none cursor-not-allowed calc-result-field"
+                                                               value="0">
                                                     </div>
                                                 </div>
                                             @endif
@@ -228,14 +223,9 @@
                                                     <!-- Readonly Calculation Result -->
                                                     <div class="mt-3">
                                                         <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Hasil Kalkulasi Rumus</label>
-                                                        <div class="relative font-semibold">
-                                                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                                <span class="text-gray-500 sm:text-sm">Rp</span>
-                                                            </div>
-                                                            <input type="text" id="calc-result-{{ $component->id_component }}" readonly
-                                                                   class="w-full pl-9 rounded-md border-gray-200 bg-gray-100/70 shadow-sm text-gray-700 sm:text-sm font-semibold select-none cursor-not-allowed calc-result-field"
-                                                                   value="0">
-                                                        </div>
+                                                        <input type="text" id="calc-result-{{ $component->id_component }}" readonly
+                                                               class="w-full rounded-md border-gray-200 bg-gray-100/70 shadow-sm text-gray-700 sm:text-sm font-semibold select-none cursor-not-allowed calc-result-field"
+                                                               value="0">
                                                     </div>
                                                 </div>
                                             @endif
