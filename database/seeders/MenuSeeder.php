@@ -48,9 +48,7 @@ class MenuSeeder extends Seeder
                 'show_menu'  => 1,
                 'submenus'   => [
                     ['nama_menu' => 'Salary Components',  'url_menu' => 'salary-components.index',  'icon_menu' => 'fas fa-cube',          'order_menu' => 1],
-                    ['nama_menu' => 'Salary Additional',  'url_menu' => 'salary-additionals.index', 'icon_menu' => 'fas fa-plus-circle',   'order_menu' => 2],
-                    ['nama_menu' => 'Salary Deduction',   'url_menu' => 'salary-deductions.index',  'icon_menu' => 'fas fa-minus-circle',  'order_menu' => 3],
-                    ['nama_menu' => 'Salary Setting',     'url_menu' => 'salary-settings.index',    'icon_menu' => 'fas fa-cog',           'order_menu' => 4],
+                    ['nama_menu' => 'Salary Setting',     'url_menu' => 'salary-settings.index',    'icon_menu' => 'fas fa-cog',           'order_menu' => 2],
                 ],
             ],
             [

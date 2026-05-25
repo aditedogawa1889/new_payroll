@@ -8,10 +8,45 @@ use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $employees = Employee::all();
-        return view('admin.employees.index', compact('employees'));
+        $query = Employee::query();
+
+        if ($request->filled('nik')) {
+            $query->where('employee_id', $request->nik);
+        }
+
+        if ($request->filled('name')) {
+            $query->where('employee_name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('job_title')) {
+            $query->where('job_title', $request->job_title);
+        }
+
+        if ($request->filled('job_level')) {
+            $query->where('job_level', $request->job_level);
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location_current_year', $request->location);
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'Past') {
+                $query->whereNotNull('termination_date');
+            } elseif ($request->status === 'Active') {
+                $query->whereNull('termination_date');
+            }
+        }
+
+        $employees = $query->get();
+
+        $jobTitles = Employee::whereNotNull('job_title')->distinct()->pluck('job_title')->sort();
+        $jobLevels = Employee::whereNotNull('job_level')->distinct()->pluck('job_level')->sort();
+        $locations = Employee::whereNotNull('location_current_year')->distinct()->pluck('location_current_year')->sort();
+
+        return view('admin.employees.index', compact('employees', 'jobTitles', 'jobLevels', 'locations'));
     }
 
     public function show(Employee $employee)

@@ -1,0 +1,39 @@
+Buatkan issue.md berisi planing untuk membuat yaitu 
+
+1. Buat Table log_activity dengan field:
+    - id int
+    - method varchar(100) (isi dengan GET, POST, PUT, DELETE dan lain-lain)
+    - uri text (isi dengan url yang diakses)
+    - controller text (isi dengan nama controller yang diakses)
+    - func varchar(500) (isi dengan nama function yang diakses)
+    - params text (isi dengan parameter yang diakses)
+    - created_by varchar(500) (isi dengan user yang mengakses)
+    - created_at datetime (isi dengan tanggal dan waktu akses)
+    - ip text (isi dengan ip address yang mengakses)
+    - ip_local text (isi dengan ip address lokal yang mengakses)
+    - latitude text (isi dengan latitude lokasi user mengakses)
+    - longitude text (isi dengan longitude lokasi user mengakses)
+
+2. Buat semua pada system akan masuk ke table log_activity
+3. saat mengakses aplikasi dari url buat agar user yang mengakses mengaktifkan lokasi pada browser.
+    agar bisa mendeteksi lokasi user saat mengakses aplikasi. 
+    jika user tidak mengaktifkan lokasi pada browser. 
+    maka tidak bisa mengakses aplikasi.
+
+4. Pada Modul Salary Components, ditambahkan kolom component parameter, agar bisa component itu dberikan pilihan:
+   - General = maka akan muncul inputan text pada Salary Setting
+   - Persentase = maka akan ada inputan number dan harus diset dihitung 
+                  precentasi dari component-component gaji yang mana saja.
+   - Custom = User bisa membuat settingan formula calculation secara custom pada module salary setting.
+   
+
+5. Pada Modul Salary Setting, 
+   - Apabila Component Parameter General, maka pada user bisa input number.
+   - Apabila Component Parameter Persentase, maka pada user bisa meinput number (1 s/d 100) dan harus diset dihitung 
+                  precentasi dari component-component gaji yang mana saja.
+   - Apabila Component Parameter Custom, maka user bisa membuat settingan formula calculation 
+     secara custom pada module salary setting. dimana dia bisa membuat persetasi dan nilainya bisa diset dari component-componet atau penambahan langsung tana hitungan, 
+     atau kombinasi keduanya.
+
+
+     buat issue.md secara detail. agar bisa diimplementasi lebih jelas

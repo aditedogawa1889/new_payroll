@@ -8,7 +8,7 @@ class StoreHrisIntegrationRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user() && $this->user()->hasPermissionId(0);
     }
 
     public function rules(): array
@@ -19,7 +19,7 @@ class StoreHrisIntegrationRequest extends FormRequest
             'employee_id' => ['required', 'string'],
             'job_title_name' => ['nullable', 'string', 'max:255'],
             'job_title_future_name' => ['nullable', 'string', 'max:255'],
-            'job_title_effective_date' => ['nullable', 'date'],
+            'job_title_effective_date' => ['nullable', 'date', 'after_or_equal:join_date'],
             'join_date' => ['nullable', 'date'],
             'location_from_name' => ['nullable', 'string', 'max:255'],
             'location_to_name' => ['nullable', 'string', 'max:255'],
