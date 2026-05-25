@@ -14,6 +14,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="hold-transition login-page bg-gray-200">
+    @include('layouts.partials.geolocation')
     <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="login-box w-full max-w-md">
             <div class="login-logo text-center mb-6 flex flex-col items-center">

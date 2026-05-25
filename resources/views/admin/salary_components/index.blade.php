@@ -24,6 +24,7 @@
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">#</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Name</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Type</th>
+                        <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Parameter</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Status</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Actions</th>
                     </tr>
@@ -36,6 +37,11 @@
                             <td class="px-4 py-3 align-middle">
                                 <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $comp->type?->id_type_component == 1 ? 'bg-blue-100 text-blue-700' : 'bg-orange-100 text-orange-700' }}">
                                     {{ $comp->type?->nama_type_component ?? 'Unknown' }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 align-middle">
+                                <span class="px-2 py-1 text-xs font-semibold rounded-full {{ $comp->component_parameter == 'general' ? 'bg-purple-100 text-purple-700' : ($comp->component_parameter == 'percentage' ? 'bg-indigo-100 text-indigo-700' : 'bg-teal-100 text-teal-700') }}">
+                                    {{ ucfirst($comp->component_parameter) }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 align-middle">
@@ -60,7 +66,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-8 text-center text-gray-500 bg-gray-50/30">
+                            <td colspan="6" class="px-4 py-8 text-center text-gray-500 bg-gray-50/30">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-cubes text-4xl text-gray-300 mb-3"></i>
                                     <p>No components found.</p>

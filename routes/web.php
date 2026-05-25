@@ -26,6 +26,9 @@ Route::middleware('auth')->group(function () {
         Route::get('salary-settings', [\App\Http\Controllers\Admin\SalarySettingController::class, 'index'])->name('salary-settings.index');
         Route::get('salary-settings/{emp_number}/edit', [\App\Http\Controllers\Admin\SalarySettingController::class, 'edit'])->name('salary-settings.edit');
         Route::put('salary-settings/{emp_number}', [\App\Http\Controllers\Admin\SalarySettingController::class, 'update'])->name('salary-settings.update');
+        
+        Route::get('payroll/calculate', [\App\Http\Controllers\Admin\PayrollCalculationController::class, 'index'])->name('payroll.calculate');
+        Route::post('payroll/calculate/{emp_number}', [\App\Http\Controllers\Admin\PayrollCalculationController::class, 'calculate'])->name('payroll.calculate.process');
     });
 });
 

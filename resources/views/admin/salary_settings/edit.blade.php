@@ -43,17 +43,77 @@
                                         <i class="fas fa-plus-circle text-blue-500 mr-2"></i> Penambahan
                                     </h4>
                                     @foreach($components->where('id_type_component', 1) as $component)
-                                        <div class="mb-4">
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $component->nama_component }}</label>
-                                            <div class="relative">
-                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <span class="text-gray-500 sm:text-sm">Rp</span>
-                                                </div>
-                                                <input type="number" step="any" name="components[{{ $component->id_component }}]" 
-                                                       value="{{ $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '' }}" 
-                                                       class="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
-                                                       placeholder="0">
+                                        <div class="mb-5 p-4 border border-gray-100 rounded-lg bg-gray-50/30 shadow-sm">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <label class="block text-sm font-semibold text-gray-800">{{ $component->nama_component }}</label>
+                                                <span class="text-[10px] px-2 py-0.5 rounded bg-blue-50 text-blue-600 font-bold uppercase tracking-wider">{{ $component->component_parameter }}</span>
                                             </div>
+
+                                            @if($component->component_parameter === 'general')
+                                                <div class="relative">
+                                                    <input type="number" step="any" min="0" name="components[{{ $component->id_component }}][value]" 
+                                                           value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
+                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
+                                                           placeholder="Nominal (e.g. 5000000)">
+                                                </div>
+                                            @elseif($component->component_parameter === 'percentage')
+                                                <div class="grid grid-cols-1 gap-3">
+                                                    <div>
+                                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Persentase (%)</label>
+                                                        <input type="number" step="any" min="0" max="100" name="components[{{ $component->id_component }}][value]" 
+                                                               value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
+                                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
+                                                               placeholder="e.g. 10">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Komponen Acuan (Basis)</label>
+                                                        <div class="max-h-32 overflow-y-auto border border-gray-200 rounded-md p-2 bg-white flex flex-col space-y-1.5">
+                                                            @php
+                                                                $savedBases = $employeeComponents->has($component->id_component) ? ($employeeComponents[$component->id_component]->basis_components ?? []) : [];
+                                                            @endphp
+                                                            @foreach($components->where('id_type_component', 1) as $basis)
+                                                                @if($basis->id_component !== $component->id_component)
+                                                                    <label class="flex items-center text-xs text-gray-700 font-normal cursor-pointer select-none">
+                                                                        <input type="checkbox" name="components[{{ $component->id_component }}][basis_components][]" value="{{ $basis->id_component }}"
+                                                                               class="rounded border-gray-300 text-adminlte-primary focus:ring-adminlte-primary mr-2"
+                                                                               {{ in_array($basis->id_component, $savedBases) ? 'checked' : '' }}>
+                                                                        {{ $basis->nama_component }}
+                                                                    </label>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @elseif($component->component_parameter === 'custom')
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Variable Picker</label>
+                                                    <div class="flex flex-wrap gap-1 mb-2">
+                                                        @foreach($components as $var)
+                                                            @if($var->id_component !== $component->id_component)
+                                                                <button type="button" onclick="insertVariable('formula-{{ $component->id_component }}', '[{{ $var->nama_component }}]')"
+                                                                        class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-100 text-[10px] font-semibold px-2 py-1 rounded transition-colors duration-150 shadow-sm">
+                                                                    + {{ $var->nama_component }}
+                                                                </button>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Math Helper</label>
+                                                    <div class="flex flex-wrap gap-1 mb-3">
+                                                        @foreach(['+', '-', '*', '/', '(', ')', '%'] as $op)
+                                                            <button type="button" onclick="insertVariable('formula-{{ $component->id_component }}', ' {{ $op }} ')"
+                                                                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 text-[10px] font-bold px-2 py-1 rounded transition-colors duration-150 shadow-sm">
+                                                                {{ $op }}
+                                                            </button>
+                                                        @endforeach
+                                                    </div>
+
+                                                    <textarea id="formula-{{ $component->id_component }}" name="components[{{ $component->id_component }}][custom_formula]"
+                                                              class="w-full text-xs font-mono rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary transition-colors"
+                                                              rows="3" placeholder="e.g. ([Gaji Pokok] * 10%) + 500000">{{ old('components.' . $component->id_component . '.custom_formula', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->custom_formula : '') }}</textarea>
+                                                    <p class="text-gray-400 text-[10px] mt-1 font-medium">Klik pada pill variabel atau operasi di atas untuk memasukkan rumus.</p>
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -64,17 +124,77 @@
                                         <i class="fas fa-minus-circle text-orange-500 mr-2"></i> Pengurangan
                                     </h4>
                                     @foreach($components->where('id_type_component', 2) as $component)
-                                        <div class="mb-4">
-                                            <label class="block text-sm font-medium text-gray-700 mb-1">{{ $component->nama_component }}</label>
-                                            <div class="relative">
-                                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <span class="text-gray-500 sm:text-sm">Rp</span>
-                                                </div>
-                                                <input type="number" step="any" name="components[{{ $component->id_component }}]" 
-                                                       value="{{ $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '' }}" 
-                                                       class="pl-10 w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
-                                                       placeholder="0">
+                                        <div class="mb-5 p-4 border border-gray-100 rounded-lg bg-gray-50/30 shadow-sm">
+                                            <div class="flex justify-between items-center mb-2">
+                                                <label class="block text-sm font-semibold text-gray-800">{{ $component->nama_component }}</label>
+                                                <span class="text-[10px] px-2 py-0.5 rounded bg-orange-50 text-orange-600 font-bold uppercase tracking-wider">{{ $component->component_parameter }}</span>
                                             </div>
+
+                                            @if($component->component_parameter === 'general')
+                                                <div class="relative">
+                                                    <input type="number" step="any" min="0" name="components[{{ $component->id_component }}][value]" 
+                                                           value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
+                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
+                                                           placeholder="Nominal (e.g. 500000)">
+                                                </div>
+                                            @elseif($component->component_parameter === 'percentage')
+                                                <div class="grid grid-cols-1 gap-3">
+                                                    <div>
+                                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Persentase (%)</label>
+                                                        <input type="number" step="any" min="0" max="100" name="components[{{ $component->id_component }}][value]" 
+                                                               value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
+                                                               class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
+                                                               placeholder="e.g. 10">
+                                                    </div>
+                                                    <div>
+                                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Komponen Acuan (Basis)</label>
+                                                        <div class="max-h-32 overflow-y-auto border border-gray-200 rounded-md p-2 bg-white flex flex-col space-y-1.5">
+                                                            @php
+                                                                $savedBases = $employeeComponents->has($component->id_component) ? ($employeeComponents[$component->id_component]->basis_components ?? []) : [];
+                                                            @endphp
+                                                            @foreach($components->where('id_type_component', 2) as $basis)
+                                                                @if($basis->id_component !== $component->id_component)
+                                                                    <label class="flex items-center text-xs text-gray-700 font-normal cursor-pointer select-none">
+                                                                        <input type="checkbox" name="components[{{ $component->id_component }}][basis_components][]" value="{{ $basis->id_component }}"
+                                                                               class="rounded border-gray-300 text-adminlte-primary focus:ring-adminlte-primary mr-2"
+                                                                               {{ in_array($basis->id_component, $savedBases) ? 'checked' : '' }}>
+                                                                        {{ $basis->nama_component }}
+                                                                    </label>
+                                                                @endif
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @elseif($component->component_parameter === 'custom')
+                                                <div>
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Variable Picker</label>
+                                                    <div class="flex flex-wrap gap-1 mb-2">
+                                                        @foreach($components as $var)
+                                                            @if($var->id_component !== $component->id_component)
+                                                                <button type="button" onclick="insertVariable('formula-{{ $component->id_component }}', '[{{ $var->nama_component }}]')"
+                                                                        class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-100 text-[10px] font-semibold px-2 py-1 rounded transition-colors duration-150 shadow-sm">
+                                                                    + {{ $var->nama_component }}
+                                                                </button>
+                                                            @endif
+                                                        @endforeach
+                                                    </div>
+                                                    
+                                                    <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Math Helper</label>
+                                                    <div class="flex flex-wrap gap-1 mb-3">
+                                                        @foreach(['+', '-', '*', '/', '(', ')', '%'] as $op)
+                                                            <button type="button" onclick="insertVariable('formula-{{ $component->id_component }}', ' {{ $op }} ')"
+                                                                    class="bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-200 text-[10px] font-bold px-2 py-1 rounded transition-colors duration-150 shadow-sm">
+                                                                {{ $op }}
+                                                            </button>
+                                                        @endforeach
+                                                    </div>
+
+                                                    <textarea id="formula-{{ $component->id_component }}" name="components[{{ $component->id_component }}][custom_formula]"
+                                                              class="w-full text-xs font-mono rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary transition-colors"
+                                                              rows="3" placeholder="e.g. ([Gaji Pokok] * 10%) + 500000">{{ old('components.' . $component->id_component . '.custom_formula', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->custom_formula : '') }}</textarea>
+                                                    <p class="text-gray-400 text-[10px] mt-1 font-medium">Klik pada pill variabel atau operasi di atas untuk memasukkan rumus.</p>
+                                                </div>
+                                            @endif
                                         </div>
                                     @endforeach
                                 </div>
@@ -92,4 +212,22 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        function insertVariable(textareaId, value) {
+            const textarea = document.getElementById(textareaId);
+            if (textarea) {
+                const start = textarea.selectionStart;
+                const end = textarea.selectionEnd;
+                const text = textarea.value;
+                const before = text.substring(0, start);
+                const after = text.substring(end, text.length);
+                textarea.value = before + value + after;
+                textarea.focus();
+                textarea.selectionStart = textarea.selectionEnd = start + value.length;
+            }
+        }
+    </script>
+    @endpush
 </x-admin-layout>

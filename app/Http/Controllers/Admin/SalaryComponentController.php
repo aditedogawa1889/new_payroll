@@ -26,6 +26,7 @@ class SalaryComponentController extends Controller
         $validated = $request->validate([
             'nama_component' => 'required|string|max:255',
             'id_type_component' => 'required|exists:md_type_komponen,id_type_component',
+            'component_parameter' => 'required|in:general,percentage,custom',
             'is_active' => 'boolean'
         ]);
 
@@ -48,6 +49,7 @@ class SalaryComponentController extends Controller
         $validated = $request->validate([
             'nama_component' => 'required|string|max:255',
             'id_type_component' => 'required|exists:md_type_komponen,id_type_component',
+            'component_parameter' => 'required|in:general,percentage,custom',
             'is_active' => 'boolean'
         ]);
 

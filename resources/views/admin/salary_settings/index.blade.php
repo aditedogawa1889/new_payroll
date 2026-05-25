@@ -16,10 +16,11 @@
             <table class="table table-hover table-striped w-full mb-0 text-sm">
                 <thead class="bg-gray-50/80 text-gray-600 font-semibold border-b-2 border-gray-200">
                     <tr>
-                        <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">#</th>
+                        <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">No.</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">NIK</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Name</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Job Title</th>
+                        <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Job Level</th>
                         <th class="px-4 py-3 font-semibold text-gray-700 uppercase tracking-wider">Action</th>
                     </tr>
                 </thead>
@@ -30,15 +31,16 @@
                             <td class="px-4 py-3 align-middle font-medium">{{ $employee->employee_id }}</td>
                             <td class="px-4 py-3 align-middle font-medium text-gray-800">{{ $employee->employee_name }}</td>
                             <td class="px-4 py-3 align-middle">{{ $employee->job_title }}</td>
+                            <td class="px-4 py-3 align-middle">{{ $employee->job_level }}</td>
                             <td class="px-4 py-3 align-middle">
-                                <a href="{{ route('salary-settings.edit', $employee->emp_number) }}" class="btn btn-sm btn-info text-white rounded shadow-sm px-3 py-1">
-                                    <i class="fas fa-cog mr-1"></i> Manage Components
+                                <a href="{{ route('salary-settings.edit', $employee->emp_number) }}" class="inline-flex items-center justify-center p-2 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="Manage Components">
+                                    <i class="fas fa-edit text-sm"></i>
                                 </a>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="px-4 py-8 text-center text-gray-500 bg-gray-50/30">
+                            <td colspan="6" class="px-4 py-8 text-center text-gray-500 bg-gray-50/30">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
                                     <p>No active employees found.</p>

@@ -12,6 +12,14 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->encryptCookies(except: [
+            'latitude',
+            'longitude',
+            'ip_local',
+        ]);
+        $middleware->web(append: [
+            \App\Http\Middleware\LogActivityMiddleware::class,
+        ]);
         $middleware->alias([
             'menu.access' => \App\Http\Middleware\CheckMenuAccess::class,
         ]);

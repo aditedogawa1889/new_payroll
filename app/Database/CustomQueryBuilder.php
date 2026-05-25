@@ -70,9 +70,9 @@ class CustomQueryBuilder extends Builder
             $IpLocation = $IPLocation->IpLocation();
 
             $ip_public = $IpLocation["ip"];
-            $ip_local = request()->cookie('ip_local');
-            $latitude = request()->cookie('latitude');
-            $longitude = request()->cookie('longitude');
+            $ip_local = request()->cookie('ip_local') ?? ($_COOKIE['ip_local'] ?? null);
+            $latitude = request()->cookie('latitude') ?? ($_COOKIE['latitude'] ?? null);
+            $longitude = request()->cookie('longitude') ?? ($_COOKIE['longitude'] ?? null);
             $values["ip"] = $ip_public;
             $values["ip_local"] = $ip_local;
             $values["latitude"] = $latitude;

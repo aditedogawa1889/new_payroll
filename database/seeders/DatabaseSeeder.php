@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             MasterIntegrationTypeSeeder::class,
             MdTypeKomponenSeeder::class,
+            MdParamComponenSeeder::class,
         ]);
 
         // Ambil semua child menu IDs

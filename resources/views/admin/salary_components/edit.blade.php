@@ -39,6 +39,15 @@
                 </div>
 
                 <div class="mb-4">
+                    <label for="component_parameter" class="block text-sm font-medium text-gray-700 mb-1">Parameter Komponen <span class="text-red-500">*</span></label>
+                    <select name="component_parameter" id="component_parameter" class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" required>
+                        <option value="general" {{ old('component_parameter', $salary_component->component_parameter) == 'general' ? 'selected' : '' }}>General (Nominal langsung)</option>
+                        <option value="percentage" {{ old('component_parameter', $salary_component->component_parameter) == 'percentage' ? 'selected' : '' }}>Persentase (Persentase dari komponen tertentu)</option>
+                        <option value="custom" {{ old('component_parameter', $salary_component->component_parameter) == 'custom' ? 'selected' : '' }}>Custom (Formula hitungan khusus)</option>
+                    </select>
+                </div>
+
+                <div class="mb-4">
                     <label class="flex items-center">
                         <input type="checkbox" name="is_active" value="1" class="rounded border-gray-300 text-adminlte-primary shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary" {{ old('is_active', $salary_component->is_active) ? 'checked' : '' }}>
                         <span class="ml-2 text-sm text-gray-600">Active</span>
