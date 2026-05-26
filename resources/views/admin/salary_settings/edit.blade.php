@@ -25,7 +25,7 @@
                 <div class="card-header bg-white border-b border-gray-100 py-4">
                     <h3 class="card-title text-gray-700 font-semibold">Component Values</h3>
                 </div>
-                <form action="{{ route('salary-settings.update', $employee->emp_number) }}" method="POST">
+                <form id="salary-settings-form" action="{{ route('salary-settings.update', $employee->emp_number) }}" method="POST">
                     @csrf
                     @method('PUT')
                     
@@ -51,10 +51,13 @@
 
                                             @if($component->component_parameter === 'general')
                                                 <div class="relative">
-                                                    <input type="number" step="any" min="0" name="components[{{ $component->id_component }}][value]" 
+                                                    <input type="text" name="components[{{ $component->id_component }}][value]" 
                                                            value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
-                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
-                                                           placeholder="Nominal (e.g. 5000000)">
+                                                           data-id="{{ $component->id_component }}"
+                                                           data-name="{{ $component->nama_component }}"
+                                                           data-type="general"
+                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors thousands-separator" 
+                                                           placeholder="Nominal (e.g. 5.000.000)">
                                                 </div>
                                             @elseif($component->component_parameter === 'percentage')
                                                 <div class="grid grid-cols-1 gap-3">
@@ -62,6 +65,9 @@
                                                         <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Persentase (%)</label>
                                                         <input type="number" step="any" min="0" max="100" name="components[{{ $component->id_component }}][value]" 
                                                                value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
+                                                               data-id="{{ $component->id_component }}"
+                                                               data-name="{{ $component->nama_component }}"
+                                                               data-type="percentage"
                                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
                                                                placeholder="e.g. 10">
                                                     </div>
@@ -75,7 +81,7 @@
                                                                 @if($basis->id_component !== $component->id_component)
                                                                     <label class="flex items-center text-xs text-gray-700 font-normal cursor-pointer select-none">
                                                                         <input type="checkbox" name="components[{{ $component->id_component }}][basis_components][]" value="{{ $basis->id_component }}"
-                                                                               class="rounded border-gray-300 text-adminlte-primary focus:ring-adminlte-primary mr-2"
+                                                                               class="rounded border-gray-300 text-adminlte-primary focus:ring-adminlte-primary mr-2 basis-checkbox"
                                                                                {{ in_array($basis->id_component, $savedBases) ? 'checked' : '' }}>
                                                                         {{ $basis->nama_component }}
                                                                     </label>
@@ -109,9 +115,20 @@
                                                     </div>
 
                                                     <textarea id="formula-{{ $component->id_component }}" name="components[{{ $component->id_component }}][custom_formula]"
+                                                              data-id="{{ $component->id_component }}"
+                                                              data-name="{{ $component->nama_component }}"
+                                                              data-type="custom"
                                                               class="w-full text-xs font-mono rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary transition-colors"
                                                               rows="3" placeholder="e.g. ([Gaji Pokok] * 10%) + 500000">{{ old('components.' . $component->id_component . '.custom_formula', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->custom_formula : '') }}</textarea>
                                                     <p class="text-gray-400 text-[10px] mt-1 font-medium">Klik pada pill variabel atau operasi di atas untuk memasukkan rumus.</p>
+
+                                                    <!-- Readonly Calculation Result -->
+                                                    <div class="mt-3">
+                                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Hasil Kalkulasi Rumus</label>
+                                                        <input type="text" id="calc-result-{{ $component->id_component }}" readonly
+                                                               class="w-full rounded-md border-gray-200 bg-gray-100/70 shadow-sm text-gray-700 sm:text-sm font-semibold select-none cursor-not-allowed calc-result-field"
+                                                               value="0">
+                                                    </div>
                                                 </div>
                                             @endif
                                         </div>
@@ -132,10 +149,13 @@
 
                                             @if($component->component_parameter === 'general')
                                                 <div class="relative">
-                                                    <input type="number" step="any" min="0" name="components[{{ $component->id_component }}][value]" 
+                                                    <input type="text" name="components[{{ $component->id_component }}][value]" 
                                                            value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
-                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
-                                                           placeholder="Nominal (e.g. 500000)">
+                                                           data-id="{{ $component->id_component }}"
+                                                           data-name="{{ $component->nama_component }}"
+                                                           data-type="general"
+                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors thousands-separator" 
+                                                           placeholder="Nominal (e.g. 500.000)">
                                                 </div>
                                             @elseif($component->component_parameter === 'percentage')
                                                 <div class="grid grid-cols-1 gap-3">
@@ -143,6 +163,9 @@
                                                         <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Persentase (%)</label>
                                                         <input type="number" step="any" min="0" max="100" name="components[{{ $component->id_component }}][value]" 
                                                                value="{{ old('components.' . $component->id_component . '.value', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->value_component : '') }}" 
+                                                               data-id="{{ $component->id_component }}"
+                                                               data-name="{{ $component->nama_component }}"
+                                                               data-type="percentage"
                                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors" 
                                                                placeholder="e.g. 10">
                                                     </div>
@@ -156,7 +179,7 @@
                                                                 @if($basis->id_component !== $component->id_component)
                                                                     <label class="flex items-center text-xs text-gray-700 font-normal cursor-pointer select-none">
                                                                         <input type="checkbox" name="components[{{ $component->id_component }}][basis_components][]" value="{{ $basis->id_component }}"
-                                                                               class="rounded border-gray-300 text-adminlte-primary focus:ring-adminlte-primary mr-2"
+                                                                               class="rounded border-gray-300 text-adminlte-primary focus:ring-adminlte-primary mr-2 basis-checkbox"
                                                                                {{ in_array($basis->id_component, $savedBases) ? 'checked' : '' }}>
                                                                         {{ $basis->nama_component }}
                                                                     </label>
@@ -190,9 +213,20 @@
                                                     </div>
 
                                                     <textarea id="formula-{{ $component->id_component }}" name="components[{{ $component->id_component }}][custom_formula]"
+                                                              data-id="{{ $component->id_component }}"
+                                                              data-name="{{ $component->nama_component }}"
+                                                              data-type="custom"
                                                               class="w-full text-xs font-mono rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary transition-colors"
                                                               rows="3" placeholder="e.g. ([Gaji Pokok] * 10%) + 500000">{{ old('components.' . $component->id_component . '.custom_formula', $employeeComponents->has($component->id_component) ? $employeeComponents[$component->id_component]->custom_formula : '') }}</textarea>
                                                     <p class="text-gray-400 text-[10px] mt-1 font-medium">Klik pada pill variabel atau operasi di atas untuk memasukkan rumus.</p>
+
+                                                    <!-- Readonly Calculation Result -->
+                                                    <div class="mt-3">
+                                                        <label class="block text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-1">Hasil Kalkulasi Rumus</label>
+                                                        <input type="text" id="calc-result-{{ $component->id_component }}" readonly
+                                                               class="w-full rounded-md border-gray-200 bg-gray-100/70 shadow-sm text-gray-700 sm:text-sm font-semibold select-none cursor-not-allowed calc-result-field"
+                                                               value="0">
+                                                    </div>
                                                 </div>
                                             @endif
                                         </div>
@@ -215,6 +249,188 @@
 
     @push('scripts')
     <script>
+        // Shunting-Yard Math Parser matching backend PHP MathEvaluator
+        class MathEvaluator {
+            evaluate(expression) {
+                expression = expression.trim();
+                if (expression === '') {
+                    return 0.0;
+                }
+
+                if (!/^[0-9+\-*\/%().\s]+$/.test(expression)) {
+                    throw new Error("Formula contains invalid characters");
+                }
+
+                const tokens = this.tokenize(expression);
+                if (tokens.length === 0) {
+                    return 0.0;
+                }
+
+                const rpn = this.parseToRpn(tokens);
+                return this.evaluateRpn(rpn);
+            }
+
+            tokenize(expression) {
+                const matches = expression.match(/[0-9]+(?:\.[0-9]+)?|[+\-*\/%()]/g);
+                return matches || [];
+            }
+
+            parseToRpn(tokens) {
+                const outputQueue = [];
+                const operatorStack = [];
+                const operators = {
+                    '+': { precedence: 2, associativity: 'left' },
+                    '-': { precedence: 2, associativity: 'left' },
+                    '*': { precedence: 3, associativity: 'left' },
+                    '/': { precedence: 3, associativity: 'left' },
+                    '%': { precedence: 3, associativity: 'left' },
+                    'u-': { precedence: 4, associativity: 'right' },
+                    'u+': { precedence: 4, associativity: 'right' }
+                };
+
+                let prevToken = null;
+
+                for (let i = 0; i < tokens.length; i++) {
+                    const token = tokens[i];
+                    if (!isNaN(parseFloat(token)) && isFinite(token)) {
+                        outputQueue.push(parseFloat(token));
+                    } else if (token === '+' || token === '-') {
+                        const isUnary = (prevToken === null || prevToken === '(' || operators[prevToken] !== undefined);
+                        const op = isUnary ? 'u' + token : token;
+
+                        while (operatorStack.length > 0) {
+                            const top = operatorStack[operatorStack.length - 1];
+                            if (top === '(') {
+                                break;
+                            }
+
+                            const op1 = operators[op];
+                            const op2 = operators[top];
+
+                            if ((op1.associativity === 'left' && op1.precedence <= op2.precedence) ||
+                                (op1.associativity === 'right' && op1.precedence < op2.precedence)) {
+                                outputQueue.push(operatorStack.pop());
+                            } else {
+                                break;
+                            }
+                        }
+                        operatorStack.push(op);
+                    } else if (token === '*' || token === '/' || token === '%') {
+                        const op = token;
+                        while (operatorStack.length > 0) {
+                            const top = operatorStack[operatorStack.length - 1];
+                            if (top === '(') {
+                                break;
+                            }
+
+                            const op1 = operators[op];
+                            const op2 = operators[top];
+
+                            if ((op1.associativity === 'left' && op1.precedence <= op2.precedence) ||
+                                (op1.associativity === 'right' && op1.precedence < op2.precedence)) {
+                                outputQueue.push(operatorStack.pop());
+                            } else {
+                                break;
+                            }
+                        }
+                        operatorStack.push(op);
+                    } else if (token === '(') {
+                        operatorStack.push(token);
+                    } else if (token === ')') {
+                        let matched = false;
+                        while (operatorStack.length > 0) {
+                            const top = operatorStack.pop();
+                            if (top === '(') {
+                                matched = true;
+                                break;
+                            }
+                            outputQueue.push(top);
+                        }
+                        if (!matched) {
+                            throw new Error("Mismatched parentheses");
+                        }
+                    } else {
+                        throw new Error("Invalid token in formula: " + token);
+                    }
+
+                    prevToken = token;
+                }
+
+                while (operatorStack.length > 0) {
+                    const top = operatorStack.pop();
+                    if (top === '(') {
+                        throw new Error("Mismatched parentheses");
+                    }
+                    outputQueue.push(top);
+                }
+
+                return outputQueue;
+            }
+
+            evaluateRpn(rpn) {
+                const stack = [];
+
+                for (let i = 0; i < rpn.length; i++) {
+                    const token = rpn[i];
+                    if (typeof token === 'number') {
+                        stack.push(token);
+                    } else {
+                        if (token === 'u-') {
+                            if (stack.length === 0) {
+                                throw new Error("Invalid unary minus");
+                            }
+                            const val = stack.pop();
+                            stack.push(-val);
+                        } else if (token === 'u+') {
+                            if (stack.length === 0) {
+                                throw new Error("Invalid unary plus");
+                            }
+                        } else {
+                            if (stack.length < 2) {
+                                throw new Error("Invalid binary expression");
+                            }
+                            const b = stack.pop();
+                            const a = stack.pop();
+
+                            switch (token) {
+                                case '+':
+                                    stack.push(a + b);
+                                    break;
+                                case '-':
+                                    stack.push(a - b);
+                                    break;
+                                case '*':
+                                    stack.push(a * b);
+                                    break;
+                                case '/':
+                                    if (b === 0) {
+                                        throw new Error("Division by zero");
+                                    }
+                                    stack.push(a / b);
+                                    break;
+                                case '%':
+                                    if (b === 0) {
+                                        throw new Error("Modulo by zero");
+                                    }
+                                    stack.push(a % b);
+                                    break;
+                                default:
+                                    throw new Error("Unknown operator: " + token);
+                            }
+                        }
+                    }
+                }
+
+                if (stack.length !== 1) {
+                    throw new Error("Invalid expression");
+                }
+
+                return stack.pop();
+            }
+        }
+
+        const mathEvaluator = new MathEvaluator();
+
         function insertVariable(textareaId, value) {
             const textarea = document.getElementById(textareaId);
             if (textarea) {
@@ -226,8 +442,256 @@
                 textarea.value = before + value + after;
                 textarea.focus();
                 textarea.selectionStart = textarea.selectionEnd = start + value.length;
+                
+                // Trigger input event to run calculations
+                textarea.dispatchEvent(new Event('input', { bubbles: true }));
             }
         }
+
+        function formatRupiah(num) {
+            if (num === null || num === undefined || isNaN(num) || !isFinite(num)) {
+                return '0';
+            }
+            const rounded = Math.round((num + Number.EPSILON) * 100) / 100;
+            const parts = rounded.toString().split('.');
+            let integerPart = parts[0];
+            let decimalPart = parts[1];
+            
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            
+            if (decimalPart) {
+                return integerPart + ',' + decimalPart;
+            }
+            return integerPart;
+        }
+
+        function formatInput(e) {
+            const input = e.target;
+            let value = input.value;
+            
+            let clean = value.replace(/[^\d]/g, '');
+            let formatted = clean.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            
+            let selectionStart = input.selectionStart;
+            let charactersBeforeCursor = value.substring(0, selectionStart).replace(/[^\d]/g, '').length;
+            
+            input.value = formatted;
+            
+            let newCursorPos = 0;
+            let digitCount = 0;
+            for (let i = 0; i < formatted.length; i++) {
+                if (formatted[i] !== '.') {
+                    digitCount++;
+                }
+                if (digitCount <= charactersBeforeCursor) {
+                    newCursorPos = i + 1;
+                } else {
+                    break;
+                }
+            }
+            input.setSelectionRange(newCursorPos, newCursorPos);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const componentsMap = new Map();
+            const nameToIdMap = new Map();
+
+            // First scan and initialize components mapping
+            function scanComponents() {
+                componentsMap.clear();
+                nameToIdMap.clear();
+
+                // General components
+                document.querySelectorAll('input[data-type="general"]').forEach(el => {
+                    const id = el.getAttribute('data-id');
+                    const name = el.getAttribute('data-name');
+                    componentsMap.set(id, {
+                        id: id,
+                        name: name,
+                        type: 'general',
+                        element: el,
+                        getValue: () => {
+                            const raw = el.value.replace(/\./g, '');
+                            const val = parseFloat(raw);
+                            return isNaN(val) ? 0.0 : val;
+                        }
+                    });
+                    nameToIdMap.set(name.trim().toLowerCase(), id);
+                });
+
+                // Percentage components
+                document.querySelectorAll('input[data-type="percentage"]').forEach(el => {
+                    const id = el.getAttribute('data-id');
+                    const name = el.getAttribute('data-name');
+                    componentsMap.set(id, {
+                        id: id,
+                        name: name,
+                        type: 'percentage',
+                        element: el,
+                        getValue: () => {
+                            const val = parseFloat(el.value);
+                            return isNaN(val) ? 0.0 : val;
+                        },
+                        getBasisIds: () => {
+                            const checked = [];
+                            document.querySelectorAll(`input[name="components[${id}][basis_components][]"]:checked`).forEach(chk => {
+                                checked.push(chk.value);
+                            });
+                            return checked;
+                        }
+                    });
+                    nameToIdMap.set(name.trim().toLowerCase(), id);
+                });
+
+                // Custom components
+                document.querySelectorAll('textarea[data-type="custom"]').forEach(el => {
+                    const id = el.getAttribute('data-id');
+                    const name = el.getAttribute('data-name');
+                    componentsMap.set(id, {
+                        id: id,
+                        name: name,
+                        type: 'custom',
+                        element: el,
+                        getFormula: () => el.value,
+                        resultElement: document.getElementById(`calc-result-${id}`)
+                    });
+                    nameToIdMap.set(name.trim().toLowerCase(), id);
+                });
+            }
+
+            function evaluate(id, path, memo) {
+                if (path.has(id)) {
+                    throw new Error("Circular dependency!");
+                }
+                if (memo[id] !== undefined) {
+                    return memo[id];
+                }
+
+                const comp = componentsMap.get(id);
+                if (!comp) {
+                    return 0.0;
+                }
+
+                path.add(id);
+
+                let val = 0.0;
+                try {
+                    if (comp.type === 'general') {
+                        val = comp.getValue();
+                    } else if (comp.type === 'percentage') {
+                        const percentage = comp.getValue();
+                        const basisIds = comp.getBasisIds();
+                        let basisSum = 0.0;
+                        basisIds.forEach(basisId => {
+                            basisSum += evaluate(basisId, path, memo);
+                        });
+                        val = basisSum * (percentage / 100.0);
+                    } else if (comp.type === 'custom') {
+                        const formula = comp.getFormula();
+                        const regex = /\[([^\]]+)\]/g;
+                        let expandedFormula = formula;
+                        let match;
+                        const replacements = [];
+
+                        while ((match = regex.exec(formula)) !== null) {
+                            const varName = match[1];
+                            const varNameClean = varName.trim().toLowerCase();
+                            const refId = nameToIdMap.get(varNameClean);
+                            let refVal = 0.0;
+                            if (refId) {
+                                refVal = evaluate(refId, path, memo);
+                            }
+                            replacements.push({
+                                placeholder: match[0],
+                                value: refVal
+                            });
+                        }
+
+                        // Sort by length desc
+                        replacements.sort((a, b) => b.placeholder.length - a.placeholder.length);
+
+                        replacements.forEach(rep => {
+                            expandedFormula = expandedFormula.replaceAll(rep.placeholder, rep.value.toString());
+                        });
+
+                        val = mathEvaluator.evaluate(expandedFormula);
+                    }
+                } catch (e) {
+                    path.delete(id);
+                    throw e;
+                }
+
+                path.delete(id);
+                memo[id] = val;
+                return val;
+            }
+
+            function updateCalculations() {
+                scanComponents();
+                const memo = {};
+                
+                document.querySelectorAll('textarea[data-type="custom"]').forEach(textarea => {
+                    const id = textarea.getAttribute('data-id');
+                    const resultInput = document.getElementById(`calc-result-${id}`);
+                    if (!resultInput) return;
+
+                    const path = new Set();
+                    try {
+                        const val = evaluate(id, path, memo);
+                        resultInput.value = formatRupiah(val);
+                        resultInput.classList.remove('text-red-500', 'border-red-500');
+                        resultInput.classList.add('text-gray-700');
+                    } catch (err) {
+                        resultInput.value = "Error: " + err.message;
+                        resultInput.classList.remove('text-gray-700');
+                        resultInput.classList.add('text-red-500', 'border-red-500');
+                    }
+                });
+            }
+
+            // Initial formatting of inputs from database
+            document.querySelectorAll('.thousands-separator').forEach(input => {
+                let rawValue = input.value;
+                if (rawValue) {
+                    let parsed = parseFloat(rawValue);
+                    if (!isNaN(parsed)) {
+                        let rounded = Math.round(parsed);
+                        input.value = rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+                    }
+                }
+            });
+
+            // Event Listeners for inputs
+            document.querySelectorAll('.thousands-separator').forEach(input => {
+                input.addEventListener('input', formatInput);
+                input.addEventListener('input', updateCalculations);
+            });
+
+            document.querySelectorAll('input[data-type="percentage"]').forEach(input => {
+                input.addEventListener('input', updateCalculations);
+            });
+
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', updateCalculations);
+            });
+
+            document.querySelectorAll('textarea[data-type="custom"]').forEach(textarea => {
+                textarea.addEventListener('input', updateCalculations);
+            });
+
+            // Remove formatting before form submission
+            const form = document.getElementById('salary-settings-form');
+            if (form) {
+                form.addEventListener('submit', function() {
+                    document.querySelectorAll('.thousands-separator').forEach(input => {
+                        input.value = input.value.replace(/\./g, '');
+                    });
+                });
+            }
+
+            // Perform initial calculation on page load
+            updateCalculations();
+        });
     </script>
     @endpush
 </x-admin-layout>

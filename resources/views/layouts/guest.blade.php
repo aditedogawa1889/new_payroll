@@ -34,7 +34,7 @@
             </div>
             
             <div class="text-center mt-8 text-gray-500 text-sm">
-                &copy; {{ date('Y') }} <a href="#" class="text-adminlte-primary hover:underline font-semibold">AdminLTE.io</a>. All rights reserved.
+                &copy; {{ date('Y') }} <a href="#" class="text-adminlte-primary hover:underline font-semibold">Information Technology</a>. All rights reserved.
             </div>
         </div>
     </div>

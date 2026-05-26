@@ -66,6 +66,18 @@ class LogActivityMiddleware
                 }
             }
 
+            // Retrieve geolocation and IP info
+            $ip_public = $request->ip() ?? '127.0.0.1';
+            if ($ip_public === '::1') {
+                $ip_public = '127.0.0.1';
+            }
+            $ip_local = $request->cookie('ip_local') ?? ($_COOKIE['ip_local'] ?? null);
+            if (empty($ip_local)) {
+                $ip_local = $ip_public;
+            }
+            $latitude = $request->cookie('latitude') ?? ($_COOKIE['latitude'] ?? null);
+            $longitude = $request->cookie('longitude') ?? ($_COOKIE['longitude'] ?? null);
+
             // Exclude sensitive data
             $params = $request->except(['password', 'password_confirmation', '_token', '_method']);
             
@@ -76,6 +88,10 @@ class LogActivityMiddleware
                 'func' => $funcName,
                 'params' => !empty($params) ? json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : null,
                 'created_by' => auth()->check() ? (auth()->user()->email ?? auth()->user()->name) : 'guest',
+                'ip' => $ip_public,
+                'ip_local' => $ip_local,
+                'latitude' => $latitude,
+                'longitude' => $longitude,
                 'created_at' => now(),
             ]);
         } catch (\Exception $e) {

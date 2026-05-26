@@ -60,7 +60,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"id_integ_type\": 1,\r\n    \"emp_number\": 2026001,\r\n    \"employee_id\": \"EMP-2026-001\",\r\n    \"job_title_name\": \"Junior Developer\",\r\n    \"job_title_future_name\": null,\r\n    \"job_title_effective_date\": \"2026-01-01\",\r\n    \"join_date\": \"2026-01-01\",\r\n    \"location_from_name\": \"Head Office\",\r\n    \"location_to_name\": \"Head Office\",\r\n    \"effective_year\": \"2026\",\r\n    \"termination_date\": null,\r\n    \"last_payroll_date\": null\r\n}",
+					"raw": "{\r\n    \"id_integ_type\": 1,\r\n    \"emp_number\": 2026001,\r\n    \"employee_id\": \"EMP-2026-001\",\r\n    \"employee_name\": \"John Doe\",\r\n    \"email\": \"johndoe@example.com\",\r\n    \"job_title_name\": \"Junior Developer\",\r\n    \"job_title_future_name\": null,\r\n    \"job_title_effective_date\": \"2026-01-01\",\r\n    \"job_level\": \"Staff\",\r\n    \"join_date\": \"2026-01-01\",\r\n    \"location_from_name\": \"Head Office\",\r\n    \"location_to_name\": \"Head Office\",\r\n    \"effective_year\": \"2026\",\r\n    \"termination_date\": null,\r\n    \"last_payroll_date\": null,\r\n    \"npwp\": \"12.345.678.9-012.000\",\r\n    \"bpjs_kesehatan\": \"0001234567890\",\r\n    \"bpjs_ketenagakerjaan\": \"98765432100\",\r\n    \"ktp\": \"3171012345670001\",\r\n    \"gender\": \"Male\",\r\n    \"bank_account\": \"1234567890\",\r\n    \"bank_name\": \"BCA\",\r\n    \"bank_account_name\": \"John Doe\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"

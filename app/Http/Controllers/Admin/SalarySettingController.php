@@ -12,8 +12,59 @@ class SalarySettingController extends Controller
 {
     public function index(Request $request)
     {
-        $employees = Employee::whereNull('termination_date')->get();
-        return view('admin.salary_settings.index', compact('employees'));
+        $query = Employee::query();
+
+        // Check if any filter is filled
+        $hasFilter = $request->filled('nik') || 
+                     $request->filled('name') || 
+                     $request->filled('job_title') || 
+                     $request->filled('job_level') || 
+                     $request->filled('location') || 
+                     $request->filled('status');
+
+        if ($request->filled('nik')) {
+            $query->where('employee_id', $request->nik);
+        }
+
+        if ($request->filled('name')) {
+            $query->where('employee_name', 'like', '%' . $request->name . '%');
+        }
+
+        if ($request->filled('job_title')) {
+            $query->where('job_title', $request->job_title);
+        }
+
+        if ($request->filled('job_level')) {
+            $query->where('job_level', $request->job_level);
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location_current_year', $request->location);
+        }
+
+        if ($request->filled('status')) {
+            if ($request->status === 'Past') {
+                $query->whereNotNull('termination_date');
+            } elseif ($request->status === 'Active') {
+                $query->whereNull('termination_date');
+            }
+        } else {
+            // Default to showing only active employees in Salary Settings
+            $query->whereNull('termination_date');
+        }
+
+        // If no filter/search criteria is applied, show only where is_set_salary = 0
+        if (!$hasFilter) {
+            $query->where('is_set_salary', 0);
+        }
+
+        $employees = $query->get();
+
+        $jobTitles = Employee::whereNotNull('job_title')->distinct()->pluck('job_title')->sort();
+        $jobLevels = Employee::whereNotNull('job_level')->distinct()->pluck('job_level')->sort();
+        $locations = Employee::whereNotNull('location_current_year')->distinct()->pluck('location_current_year')->sort();
+
+        return view('admin.salary_settings.index', compact('employees', 'jobTitles', 'jobLevels', 'locations'));
     }
 
     public function edit($emp_number)
@@ -81,6 +132,8 @@ class SalarySettingController extends Controller
                     ->update(['is_active' => false, 'updated_by' => auth()->user()->name ?? 'system']);
             }
         }
+
+        $employee->update(['is_set_salary' => 1]);
 
         return redirect()->route('salary-settings.index')->with('success', 'Salary settings updated for ' . $employee->employee_name);
     }
