@@ -124,4 +124,74 @@ class HrisIntegrationTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_get_integration_types_only_returns_active(): void
+    {
+        $user = User::factory()->create([
+            'id_permission' => [0],
+        ]);
+        Sanctum::actingAs($user);
+
+        // Make one type inactive
+        MasterIntegrationType::first()->update(['is_active' => 0]);
+
+        $response = $this->getJson('/api/hris/types');
+
+        $response->assertStatus(200);
+        $data = $response->json();
+        
+        $this->assertNotEmpty($data);
+        foreach ($data as $type) {
+            $this->assertEquals(1, $type['is_active']);
+        }
+    }
+
+    public function test_can_store_integration_with_new_employee_details(): void
+    {
+        $user = User::factory()->create([
+            'id_permission' => [0],
+        ]);
+        Sanctum::actingAs($user);
+
+        $payload = [
+            'id_integ_type' => 1,
+            'emp_number' => 123456,
+            'employee_id' => 'EMP001',
+            'employee_name' => 'John Doe',
+            'email' => 'johndoe@example.com',
+            'job_title_name' => 'Junior Developer',
+            'job_level' => 'Staff',
+            'join_date' => '2024-01-15',
+            'location_from_name' => 'Head Office',
+            'location_to_name' => 'Branch Office',
+            'job_title_effective_date' => '2024-02-01',
+            'npwp' => '12.345.678.9-012.000',
+            'bpjs_kesehatan' => '0001234567890',
+            'bpjs_ketenagakerjaan' => '98765432100',
+            'ktp' => '3171012345670001',
+            'gender' => 'Male',
+            'bank_account' => '1234567890',
+            'bank_name' => 'BCA',
+            'bank_account_name' => 'John Doe',
+        ];
+
+        $response = $this->postJson('/api/hris/integrations', $payload);
+
+        $response->assertStatus(201);
+
+        $this->assertDatabaseHas('employee_integrations', [
+            'emp_number' => 123456,
+            'employee_id' => 'EMP001',
+            'employee_name' => 'John Doe',
+            'email' => 'johndoe@example.com',
+            'npwp' => '12.345.678.9-012.000',
+            'bpjs_kesehatan' => '0001234567890',
+            'bpjs_ketenagakerjaan' => '98765432100',
+            'ktp' => '3171012345670001',
+            'gender' => 'Male',
+            'bank_account' => '1234567890',
+            'bank_name' => 'BCA',
+            'bank_account_name' => 'John Doe',
+        ]);
+    }
 }
