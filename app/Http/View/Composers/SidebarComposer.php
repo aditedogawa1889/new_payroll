@@ -15,7 +15,7 @@ class SidebarComposer
     public function compose(View $view): void
     {
         $user = Auth::user();
-        if (!$user) {
+        if (!$user || $user->must_change_password) {
             $view->with('sidebarMenus', collect());
             return;
         }

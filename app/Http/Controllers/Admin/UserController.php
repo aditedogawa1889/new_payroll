@@ -37,14 +37,17 @@ class UserController extends Controller
         $request->validate([
             'name'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'username' => ['required', 'string', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
             'name'          => $request->name,
             'email'         => $request->email,
+            'username'      => $request->username,
             'password'      => Hash::make($request->password),
             'id_permission' => $request->input('id_permission', []),
+            'must_change_password' => true,
         ]);
 
         // Simpan akses menu (hanya child menus)
@@ -84,17 +87,21 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'name'     => ['required', 'string', 'max:255'],
+            'email'    => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'username' => ['required', 'string', 'max:255', 'unique:users,username,' . $user->id],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user->name          = $request->name;
         $user->email         = $request->email;
+        $user->username      = $request->username;
         $user->id_permission = $request->input('id_permission', []);
 
         if ($request->password) {
             $user->password = Hash::make($request->password);
+            // If admin explicitly updates their password, we can optionally keep or reset flag, 
+            // but let's keep it as is unless reset is explicitly clicked.
         }
 
         $user->save();
@@ -115,6 +122,15 @@ class UserController extends Controller
         );
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function resetPassword(User $user)
+    {
+        $user->password = Hash::make('Metland@123');
+        $user->must_change_password = true;
+        $user->save();
+
+        return redirect()->route('users.index')->with('success', 'User password successfully reset to "Metland@123".');
     }
 
     public function destroy(User $user)

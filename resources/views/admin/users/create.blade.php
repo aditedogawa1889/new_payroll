@@ -42,6 +42,10 @@
                             <input type="email" name="email" value="{{ old('email') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-adminlte-primary focus:border-adminlte-primary" required>
                         </div>
                         <div>
+                            <label class="block text-sm font-medium text-gray-700">Username</label>
+                            <input type="text" name="username" value="{{ old('username') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-adminlte-primary focus:border-adminlte-primary" required>
+                        </div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700">Password</label>
                             <input type="password" name="password" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-adminlte-primary focus:border-adminlte-primary" required>
                         </div>
@@ -100,7 +104,7 @@
                                                 @endforeach
                                             </div>
                                         @else
-                                            <p class="ml-6 text-xs text-gray-400 italic">Tidak ada sub-menu.</p>
+                                            <p class="ml-6 text-xs text-gray-400 italic">No sub-menus available.</p>
                                         @endif
                                     </div>
                                 @endforeach

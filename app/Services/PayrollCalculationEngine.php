@@ -19,11 +19,20 @@ class PayrollCalculationEngine
      * Calculate payroll components and net salary for an employee.
      *
      * @param string $empNumber
+     * @param int|null $month
+     * @param int|null $year
      * @return array
      * @throws \InvalidArgumentException
      */
-    public function calculate(string $empNumber): array
+    public function calculate(string $empNumber, $month = null, $year = null): array
     {
+        if (is_null($month)) {
+            $month = (int) now()->format('m');
+        }
+        if (is_null($year)) {
+            $year = (int) now()->format('Y');
+        }
+
         $employee = Employee::where('emp_number', $empNumber)->firstOrFail();
 
         // Get all active payroll settings for the employee along with component definition and type
@@ -228,13 +237,41 @@ class PayrollCalculationEngine
             }
         }
 
-        $netSalary = $totalEarnings - $totalDeductions;
-
         // Re-map breakdown to match original sorted order
         $orderedBreakdown = [];
         foreach ($sortedOrder as $id) {
             $orderedBreakdown[] = $breakdown[$id];
         }
+
+        // Query active or paid loan schedules for this employee for the selected month & year
+        $activeInstallments = \DB::table('employee_loans_schedule')
+            ->join('employee_loans', 'employee_loans.loan_id', '=', 'employee_loans_schedule.loan_id')
+            ->where('employee_loans.employee_id', $employee->emp_number)
+            ->where('employee_loans_schedule.month_number', $month)
+            ->where('employee_loans_schedule.year_number', $year)
+            ->whereIn('employee_loans_schedule.payment_status', [1, 2])
+            ->where('employee_loans.loan_status', 1)
+            ->select('employee_loans_schedule.amount')
+            ->get();
+
+        $loanDeductionSum = (float) $activeInstallments->sum('amount');
+
+        if ($loanDeductionSum > 0) {
+            $orderedBreakdown[] = [
+                'id_component' => 'loan_deduction',
+                'nama_component' => 'Potongan Pinjaman',
+                'type' => 'Pengurangan',
+                'parameter' => 'general',
+                'input_value' => $loanDeductionSum,
+                'basis_components' => [],
+                'custom_formula' => null,
+                'expanded_formula' => null,
+                'evaluated_value' => $loanDeductionSum,
+            ];
+            $totalDeductions += $loanDeductionSum;
+        }
+
+        $netSalary = $totalEarnings - $totalDeductions;
 
         return [
             'employee' => $employee,

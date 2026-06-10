@@ -66,4 +66,9 @@ class Employee extends Model
     {
         return $this->hasMany(MutationEmployee::class, 'emp_number', 'emp_number');
     }
+
+    public function loans()
+    {
+        return $this->hasMany(EmployeeLoan::class, 'employee_id', 'emp_number');
+    }
 }

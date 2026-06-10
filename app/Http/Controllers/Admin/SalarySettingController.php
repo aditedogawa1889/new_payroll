@@ -88,7 +88,7 @@ class SalarySettingController extends Controller
             'components.*.basis_components' => 'nullable|array',
             'components.*.custom_formula' => 'nullable|string|max:1000',
         ], [
-            'components.*.value.min' => 'Nilai komponen tidak boleh minus.'
+            'components.*.value.min' => 'Component value cannot be negative.'
         ]);
 
         $employee = Employee::where('emp_number', $emp_number)->firstOrFail();
