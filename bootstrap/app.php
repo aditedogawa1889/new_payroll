@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->web(append: [
             \App\Http\Middleware\LogActivityMiddleware::class,
+            \App\Http\Middleware\ForcePasswordChange::class,
         ]);
         $middleware->alias([
             'menu.access' => \App\Http\Middleware\CheckMenuAccess::class,

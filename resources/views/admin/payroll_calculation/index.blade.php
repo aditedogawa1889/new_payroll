@@ -8,6 +8,8 @@
         loading: false,
         errorMessage: '',
         calcData: null,
+        month: '{{ now()->month }}',
+        year: '{{ now()->year }}',
         formatCurrency(val) {
             return 'Rp. ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
         },
@@ -17,7 +19,7 @@
             this.openModal = true;
             this.calcData = null;
             
-            fetch(`/admin/payroll/calculate/${empNumber}`, {
+            fetch(`/admin/payroll/calculate/${empNumber}?month=${this.month}&year=${this.year}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -36,16 +38,68 @@
             })
             .catch(err => {
                 this.loading = false;
-                this.errorMessage = err.message || 'Terjadi kesalahan saat menghitung gaji.';
+                this.errorMessage = err.message || 'An error occurred while calculating the salary.';
+            });
+        },
+        processPayment(empNumber) {
+            if (!confirm('Are you sure you want to process the payroll and record the loan installment deduction payment for this period?')) {
+                return;
+            }
+            this.loading = true;
+            this.errorMessage = '';
+            
+            fetch(`/admin/payroll/process/${empNumber}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    month: this.month,
+                    year: this.year
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw err; });
+                }
+                return response.json();
+            })
+            .then(json => {
+                alert(json.message);
+                this.calculatePayroll(empNumber);
+            })
+            .catch(err => {
+                this.loading = false;
+                this.errorMessage = err.message || 'An error occurred while processing the payment.';
             });
         }
     }">
+        <!-- Period Selection Bar -->
+        <div class="mb-6 bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex items-center space-x-3">
+            <label for="payroll_month" class="text-sm font-semibold text-gray-700">Payroll Calculation Period:</label>
+            <select id="payroll_month" x-model="month" class="border-gray-300 rounded-md shadow-sm text-sm px-3 py-1.5 focus:ring-green-500 focus:border-green-500 bg-gray-50">
+                @for ($m = 1; $m <= 12; $m++)
+                    <option value="{{ $m }}">
+                        {{ DateTime::createFromFormat('!m', $m)->format('F') }}
+                    </option>
+                @endfor
+            </select>
+            <select id="payroll_year" x-model="year" class="border-gray-300 rounded-md shadow-sm text-sm px-3 py-1.5 focus:ring-green-500 focus:border-green-500 bg-gray-50">
+                @for ($y = now()->year - 2; $y <= now()->year + 2; $y++)
+                    <option value="{{ $y }}">
+                        {{ $y }}
+                    </option>
+                @endfor
+            </select>
+        </div>
+
         <!-- Employee List Card -->
         <div class="card elevation-2 border-0 rounded-lg bg-white shadow-sm overflow-hidden">
             <div class="card-header bg-white border-b border-gray-100 py-4 px-6 flex justify-between items-center">
                 <h3 class="card-title text-gray-700 font-semibold text-lg flex items-center gap-2">
                     <i class="fas fa-calculator text-green-600"></i>
-                    Hitung Gaji Karyawan
+                    Calculate Employee Salary
                 </h3>
             </div>
             <div class="card-body p-0">
@@ -54,10 +108,10 @@
                         <tr>
                             <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">No.</th>
                             <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">NIK</th>
-                            <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Nama</th>
-                            <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Jabatan</th>
+                            <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Name</th>
+                            <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Job Title</th>
                             <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Level</th>
-                            <th class="px-6 py-3.5 text-center font-semibold text-gray-700 uppercase tracking-wider">Aksi</th>
+                            <th class="px-6 py-3.5 text-center font-semibold text-gray-700 uppercase tracking-wider">Action</th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700 divider-y divider-gray-100">
@@ -71,7 +125,7 @@
                                 <td class="px-6 py-4 align-middle text-center">
                                     <button @click="calculatePayroll('{{ $employee->emp_number }}')" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0">
                                         <i class="fas fa-play text-[10px]"></i>
-                                        Hitung Gaji
+                                        Calculate Salary
                                     </button>
                                 </td>
                             </tr>
@@ -80,7 +134,7 @@
                                 <td colspan="6" class="px-6 py-12 text-center text-gray-500 bg-gray-50/30">
                                     <div class="flex flex-col items-center justify-center">
                                         <i class="fas fa-users text-4xl text-gray-300 mb-3"></i>
-                                        <p class="font-medium text-gray-500">Tidak ada data karyawan aktif.</p>
+                                        <p class="font-medium text-gray-500">No active employee data found.</p>
                                     </div>
                                 </td>
                             </tr>
@@ -114,7 +168,7 @@
                 <div class="px-6 py-4 bg-white border-b border-gray-100 flex justify-between items-center">
                     <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
                         <i class="fas fa-file-invoice text-green-600"></i>
-                        Rincian Perhitungan Gaji (Payslip)
+                        Salary Calculation Details (Payslip)
                     </h3>
                     <button @click="openModal = false" class="text-gray-400 hover:text-gray-600 transition-colors p-1.5 rounded-lg hover:bg-gray-50">
                         <i class="fas fa-times text-lg"></i>
@@ -129,8 +183,8 @@
                             <div class="absolute inset-0 rounded-full border-4 border-green-100"></div>
                             <div class="absolute inset-0 rounded-full border-4 border-green-600 border-t-transparent animate-spin"></div>
                         </div>
-                        <h4 class="text-gray-700 font-semibold text-lg">Mengevaluasi Gaji...</h4>
-                        <p class="text-gray-400 text-sm mt-1">Menganalisis dependensi variabel dan memproses rumus matematika...</p>
+                        <h4 class="text-gray-700 font-semibold text-lg">Evaluating Salary...</h4>
+                        <p class="text-gray-400 text-sm mt-1">Analyzing variable dependencies and processing mathematical formulas...</p>
                     </div>
 
                     <!-- Error State -->
@@ -139,7 +193,7 @@
                             <i class="fas fa-exclamation-triangle text-xl"></i>
                         </div>
                         <div>
-                            <h4 class="font-bold text-red-800 text-md">Gagal Menghitung Gaji</h4>
+                            <h4 class="font-bold text-red-800 text-md">Failed to Calculate Salary</h4>
                             <p class="text-sm mt-1" x-text="errorMessage"></p>
                         </div>
                     </div>
@@ -149,7 +203,7 @@
                         <!-- Employee Info Section -->
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50/50 border border-gray-100 rounded-xl">
                             <div>
-                                <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Nama Karyawan</span>
+                                <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Employee Name</span>
                                 <span class="font-bold text-gray-800 text-base" x-text="calcData?.employee?.employee_name"></span>
                             </div>
                             <div>
@@ -157,7 +211,7 @@
                                 <span class="font-medium text-gray-700 text-base" x-text="calcData?.employee?.employee_id"></span>
                             </div>
                             <div>
-                                <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Jabatan / Level</span>
+                                <span class="text-xs text-gray-400 font-semibold uppercase tracking-wider block">Job Title / Level</span>
                                 <span class="font-medium text-gray-700 text-base">
                                     <span x-text="calcData?.employee?.job_title"></span>
                                     <span class="text-gray-400" x-text="'(' + calcData?.employee?.job_level + ')'"></span>
@@ -169,7 +223,7 @@
                         <div class="p-4 bg-white border border-gray-100 rounded-xl shadow-sm">
                             <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
                                 <i class="fas fa-sitemap text-green-600"></i>
-                                Urutan Evaluasi Komponen (Topological Sort Order)
+                                Component Evaluation Order (Topological Sort Order)
                             </h4>
                             <div class="flex flex-wrap items-center gap-2">
                                 <template x-for="(comp, idx) in calcData?.components" :key="comp.id_component">
@@ -195,7 +249,7 @@
                             <div class="space-y-4">
                                 <h4 class="text-sm font-bold text-gray-700 border-b border-gray-100 pb-2 flex items-center gap-2">
                                     <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
-                                    Penambahan (Earnings)
+                                    Earnings
                                 </h4>
                                 <div class="space-y-3">
                                     <template x-for="comp in calcData?.components.filter(c => c.type === 'Penambahan')" :key="comp.id_component">
@@ -239,7 +293,7 @@
                                         </div>
                                     </template>
                                     <div class="p-3.5 bg-green-50/30 border border-green-100/50 rounded-xl flex justify-between items-center">
-                                        <span class="font-bold text-gray-700 text-sm">Total Penambahan</span>
+                                        <span class="font-bold text-gray-700 text-sm">Total Earnings</span>
                                         <span class="font-bold text-green-700 text-base" x-text="formatCurrency(calcData?.total_earnings)"></span>
                                     </div>
                                 </div>
@@ -249,7 +303,7 @@
                             <div class="space-y-4">
                                 <h4 class="text-sm font-bold text-gray-700 border-b border-gray-100 pb-2 flex items-center gap-2">
                                     <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-                                    Pengurangan (Deductions)
+                                    Deductions
                                 </h4>
                                 <div class="space-y-3">
                                     <template x-for="comp in calcData?.components.filter(c => c.type === 'Pengurangan')" :key="comp.id_component">
@@ -293,7 +347,7 @@
                                         </div>
                                     </template>
                                     <div class="p-3.5 bg-red-50/30 border border-red-100/50 rounded-xl flex justify-between items-center">
-                                        <span class="font-bold text-gray-700 text-sm">Total Pengurangan</span>
+                                        <span class="font-bold text-gray-700 text-sm">Total Deductions</span>
                                         <span class="font-bold text-red-700 text-base" x-text="formatCurrency(calcData?.total_deductions)"></span>
                                     </div>
                                 </div>
@@ -307,8 +361,8 @@
                                     <i class="fas fa-wallet text-2xl"></i>
                                 </div>
                                 <div>
-                                    <h4 class="font-bold text-lg text-white/90">Take Home Pay (Gaji Bersih)</h4>
-                                    <p class="text-xs text-white/75">Gaji bersih yang diterima karyawan setelah seluruh penambahan dan pengurangan dihitung.</p>
+                                    <h4 class="font-bold text-lg text-white/90">Take Home Pay (Net Salary)</h4>
+                                    <p class="text-xs text-white/75">Net salary received by the employee after all earnings and deductions are calculated.</p>
                                 </div>
                             </div>
                             <div class="text-right">
@@ -319,10 +373,21 @@
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2">
-                    <button @click="openModal = false" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-sm transition-colors shadow-sm">
-                        Tutup
-                    </button>
+                <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                    <div>
+                        <template x-if="calcData?.components.some(c => c.id_component === 'loan_deduction')">
+                            <button @click="processPayment(calcData?.employee?.emp_number)" 
+                                    class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-colors">
+                                <i class="fas fa-check-double"></i>
+                                Process Payroll & Pay Installment
+                            </button>
+                        </template>
+                    </div>
+                    <div class="flex gap-2">
+                        <button @click="openModal = false" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-semibold rounded-lg text-sm transition-colors shadow-sm">
+                            Close
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -37,9 +37,11 @@ class DatabaseSeeder extends Seeder
         // Admin IT Pusat (permission id: 99) - akses semua menu
         $admin = User::create([
             'name'          => 'Admin IT Pusat',
+            'username'      => 'admin',
             'email'         => 'admin@payroll.com',
             'password'      => Hash::make('password'),
             'id_permission' => [99],
+            'must_change_password' => true,
         ]);
 
         UsersMenu::create([
@@ -52,9 +54,11 @@ class DatabaseSeeder extends Seeder
         // Admin Payroll (permission id: 1) - akses employee, salary, payroll
         $payrollAdmin = User::create([
             'name'          => 'Admin Payroll',
+            'username'      => 'payroll',
             'email'         => 'payroll@payroll.com',
             'password'      => Hash::make('password'),
             'id_permission' => [1],
+            'must_change_password' => true,
         ]);
 
         UsersMenu::create([
@@ -67,9 +71,11 @@ class DatabaseSeeder extends Seeder
         // Manager Payroll (permission id: 11) - akses hanya payroll
         $manager = User::create([
             'name'          => 'Manager Payroll',
+            'username'      => 'manager',
             'email'         => 'manager@payroll.com',
             'password'      => Hash::make('password'),
             'id_permission' => [11],
+            'must_change_password' => true,
         ]);
 
         UsersMenu::create([

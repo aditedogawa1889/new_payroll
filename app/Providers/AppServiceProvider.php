@@ -23,5 +23,13 @@ class AppServiceProvider extends ServiceProvider
             'layouts.partials.sidebar',
             \App\Http\View\Composers\SidebarComposer::class
         );
+
+        \Illuminate\Validation\Rules\Password::defaults(function () {
+            return \Illuminate\Validation\Rules\Password::min(8)
+                ->letters()
+                ->mixedCase()
+                ->numbers()
+                ->symbols();
+        });
     }
 }

@@ -14,11 +14,14 @@
     </x-slot>
 
     <!-- Filter Form Card -->
-    <div class="admin-card mb-6">
-        <div class="admin-card-header flex justify-between items-center">
+    <div class="admin-card mb-6" x-data="{ isOpen: true }">
+        <div class="admin-card-header flex justify-between items-center cursor-pointer select-none" @click="isOpen = !isOpen">
             <h3 class="text-lg font-semibold text-gray-800"><i class="fas fa-filter mr-2"></i> Filter Employees</h3>
+            <button type="button" class="text-gray-500 hover:text-gray-700 focus:outline-none transition-transform duration-200" :class="isOpen ? 'rotate-180' : ''">
+                <i class="fas fa-chevron-down"></i>
+            </button>
         </div>
-        <div class="admin-card-body p-5">
+        <div class="admin-card-body p-5" x-show="isOpen" x-transition>
             <form action="{{ route('employees.index') }}" method="GET">
                 <div class="grid grid-cols-3 gap-6">
                     <!-- NIK Filter -->

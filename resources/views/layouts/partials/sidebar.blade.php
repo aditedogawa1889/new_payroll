@@ -29,12 +29,14 @@
         <!-- Sidebar Menu -->
         <nav class="mt-2 px-2">
             <ul class="nav nav-pills nav-sidebar flex-column space-y-1" data-widget="treeview" role="menu">
+                @if(!Auth::user()->must_change_password)
                 <li class="nav-item">
                     <a href="{{ route('dashboard') }}" class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors {{ request()->routeIs('dashboard') ? 'bg-white/50 text-gray-900 font-bold active shadow-sm' : 'text-gray-700' }}">
                         <i class="nav-icon fas fa-tachometer-alt w-5 h-5 mr-3 flex-shrink-0 flex items-center justify-center"></i>
                         <p class="transition-opacity duration-300" :class="sidebarOpen || isHovered ? 'opacity-100' : 'opacity-0'">Dashboard</p>
                     </a>
                 </li>
+                @endif
 
                 @foreach($sidebarMenus as $menu)
                     <li class="nav-item has-treeview" x-data="{ open: {{ $menu->submenus->contains(fn($s) => request()->routeIs($s->url_menu)) ? 'true' : 'false' }} }">
@@ -61,7 +63,9 @@
                     </li>
                 @endforeach
 
+                @if(!Auth::user()->must_change_password)
                 <li class="nav-header text-xs uppercase font-bold text-gray-400 mt-4 mb-2 px-2 transition-opacity duration-300" :class="sidebarOpen || isHovered ? 'opacity-100' : 'opacity-0'">SETTINGS</li>
+                @endif
 
                 <li class="nav-item">
                     <a href="{{ route('profile.edit') }}" class="nav-link flex items-center p-2 rounded hover:bg-black/5 transition-colors {{ request()->routeIs('profile.edit') ? 'bg-white/50 text-gray-900 font-bold active' : 'text-gray-700' }}">

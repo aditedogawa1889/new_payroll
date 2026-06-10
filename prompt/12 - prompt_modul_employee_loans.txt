@@ -1,0 +1,37 @@
+Buatkan issue.md berisi planing untuk membuat yaitu:
+
+- Buat table employee_loans dengan kolom
+    - loan_id int (PK auto_increment) 
+    - employee_id int (FK ke tabel employee) 
+    - loan_amount numeric(18,0)
+    - loan_date date
+    - loan_description text
+    - loan_status int (1 = Aktif, 2 = Lunas)
+    - loan_created_at datetime
+    - loan_created_by varchar(200) (nama user)
+    - loan_updated_at datetime
+    - loan_updated_by varchar(200) (nama user)
+
+- Buat table employee_loans_schedule dengan kolom: 
+    - loan_schedule_id int (PK auto_increment)
+    - loan_id int (FK ke tabel employee_loans)
+    - month_number int (isi dengan angka bulan 1-12)
+    - year_number int (isi dengan angka tahun 4 digit)
+    - amount numeric(18,0)
+    - remaining_amount numeric(18,0)
+    - paid_amount numeric(18,0) default 0
+    - payment_date datetime
+    - payment_status int (1 = Aktif, 2 = Lunas)
+    - created_at datetime
+    - created_by varchar(200) (nama user)
+    - updated_at datetime
+    - updated_by varchar(200) (nama user)
+
+- Buat Module Employee Loans dimana untuk 1 employee bisa mempunyai lebih dari 1 pinjaman.
+- lalu buat inputan untuk menginput jumlah pinjaman dan simpan pada table employee_loans.
+
+- setelah inputan diinput, maka buat modul detail dari inputan pinjaman. 
+- lalu buat template upload yang bisa didownload saat upload schedule cicilan pinjaman.
+
+setelah pinjaman dibuat dan schedule yang sudah diupload. maka pada menu Salary Setting bisa disambungkan ke employee loans.
+

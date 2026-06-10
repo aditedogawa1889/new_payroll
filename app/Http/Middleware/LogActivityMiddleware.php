@@ -87,7 +87,7 @@ class LogActivityMiddleware
                 'controller' => $controllerName,
                 'func' => $funcName,
                 'params' => !empty($params) ? json_encode($params, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) : null,
-                'created_by' => auth()->check() ? (auth()->user()->email ?? auth()->user()->name) : 'guest',
+                'created_by' => auth()->check() ? (auth()->user()->username ?? auth()->user()->email ?? auth()->user()->name) : 'guest',
                 'ip' => $ip_public,
                 'ip_local' => $ip_local,
                 'latitude' => $latitude,
