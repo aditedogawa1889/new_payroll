@@ -23,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'menu.access' => \App\Http\Middleware\CheckMenuAccess::class,
+            'auth.api_token' => \App\Http\Middleware\AuthApiToken::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
