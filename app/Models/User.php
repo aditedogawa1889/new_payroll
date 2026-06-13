@@ -27,6 +27,7 @@ class User extends Authenticatable
         'password',
         'id_permission',
         'must_change_password',
+        'api_token',
     ];
 
     /**
@@ -92,5 +93,17 @@ class User extends Authenticatable
     public function hasPermissionId(int $permissionId): bool
     {
         return in_array($permissionId, $this->getPermissionIds());
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if (empty($user->api_token)) {
+                $user->api_token = \Illuminate\Support\Str::random(60);
+            }
+        });
     }
 }
