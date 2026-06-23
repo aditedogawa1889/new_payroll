@@ -42,6 +42,10 @@
                             <label class="block text-sm font-medium text-gray-700">Email Address</label>
                             <input type="email" name="email" value="{{ old('email', $user->email) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-adminlte-primary focus:border-adminlte-primary" required>
                         </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Username</label>
+                            <input type="text" name="username" value="{{ old('username', $user->username) }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-adminlte-primary focus:border-adminlte-primary" required>
+                        </div>
                         <div class="pt-4 border-t border-gray-100">
                             <h5 class="text-sm font-bold text-gray-600 mb-3">Change Password (Optional)</h5>
                             <div class="space-y-4">
@@ -106,7 +110,7 @@
                                                 @endforeach
                                             </div>
                                         @else
-                                            <p class="ml-6 text-xs text-gray-400 italic">Tidak ada sub-menu.</p>
+                                            <p class="ml-6 text-xs text-gray-400 italic">No sub-menus available.</p>
                                         @endif
                                     </div>
                                 @endforeach

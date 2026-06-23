@@ -1,0 +1,37 @@
+Buatkan issue.md berisi planing untuk membuat yaitu:
+
+tambah field pada table employee_loans:
+- loan_interest numeric(18,2) default 1
+
+tambah field pada table employee_payroll_component:
+- loan_interest_schedule numeric(18,2) (diambil dari loan_interest dari table employee_loans)
+- loan_interest_sched_amount (numeric(18,2)) 
+- loan_total_sched_amount (numeric(18,2)) 
+Lalu buat mekanisme inputan bunga pinjaman pada employee loans. 
+
+nilai kolom loan_interest_sched_amount pada employee_loans_schedule adalah :
+
+loan_interest_sched_amount =  amount * loan_interest_schedule
+loan_total_sched_amount = amount + loan_interest_sched_amount
+
+Contoh:
+- kolom amount: 1000000
+- kolom loan_interest_schedule: 0.01
+- maka nilai kolom loan_interest_sched_amount adalah: 1000
+- maka nilai kolom loan_total_sched_amount adalah: 1001000
+
+ 
+Enkripsi kolom loan_amount dari tabel employee_loans
+Enkripsi kolom amount, loan_interest_sched_amount, 
+loan_total_sched_amount,remaining_amount, paid_amount 
+dari employee_loans_schedule
+
+lakukan enkripsi seperti pada table employee_payroll_component.
+
+lalu integrasikan data pinjaman dari tabel employee_loans_schedule
+kearah kolom di employee_payroll_component demgan komponen koperasi. 
+
+jadi jika employee tersebut mempunyai cicilan pinjaman, 
+maka akumulasikan cicilan terdekat dari table employee_loans_schedule
+ke employee_payroll_component dengan nama komponen nya pinjaman. 
+sehingga kolom komponen koperasi sudah langsung terisi dan tidak bisa diganti.

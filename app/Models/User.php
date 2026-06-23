@@ -23,8 +23,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'username',
         'password',
         'id_permission',
+        'must_change_password',
+        'api_token',
     ];
 
     /**
@@ -48,6 +51,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'id_permission' => 'array',
+            'must_change_password' => 'boolean',
         ];
     }
 
@@ -89,5 +93,17 @@ class User extends Authenticatable
     public function hasPermissionId(int $permissionId): bool
     {
         return in_array($permissionId, $this->getPermissionIds());
+    }
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            if (empty($user->api_token)) {
+                $user->api_token = \Illuminate\Support\Str::random(60);
+            }
+        });
     }
 }

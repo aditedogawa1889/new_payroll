@@ -31,6 +31,8 @@
       }" 
       x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value))">
     
+    @include('layouts.partials.geolocation')
+    
     <div class="wrapper min-h-screen">
         @include('layouts.partials.navbar')
         @include('layouts.partials.sidebar')

@@ -37,6 +37,7 @@
                     <tr>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permission</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Menu Access</th>
@@ -48,6 +49,7 @@
                     <tr>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $user->id }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-semibold">{{ $user->name }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium text-gray-600">{{ $user->username }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $user->email }}</td>
                         <td class="px-6 py-4 whitespace-normal text-sm text-gray-500">
                             <div class="flex flex-wrap gap-1">
@@ -65,10 +67,16 @@
                                 {{ count($user->usersMenu?->id_menus ?? []) }} menus
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center space-x-3">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center items-center space-x-3">
                             <a href="{{ route('users.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900 transform hover:scale-110 transition-transform" title="Edit User">
                                 <i class="fas fa-edit text-lg"></i>
                             </a>
+                            <form action="{{ route('users.reset-password', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to reset password for this user to default &quot;Metland@123&quot;?')" class="inline">
+                                @csrf
+                                <button type="submit" class="text-yellow-600 hover:text-yellow-900 transform hover:scale-110 transition-transform" title="Reset Password">
+                                    <i class="fas fa-key text-lg"></i>
+                                </button>
+                            </form>
                             @if($user->id !== auth()->id())
                             <form action="{{ route('users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
                                 @csrf

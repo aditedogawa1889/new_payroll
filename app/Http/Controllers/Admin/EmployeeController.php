@@ -10,6 +10,10 @@ class EmployeeController extends Controller
 {
     public function index(Request $request)
     {
+        if (!$request->has('status')) {
+            $request->merge(['status' => 'Active']);
+        }
+
         $query = Employee::query();
 
         if ($request->filled('nik')) {
@@ -85,9 +89,21 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $validated = $request->validate([
-            'employee_id' => 'required',
-            'employee_name' => 'required',
+            'employee_id' => 'required|string',
+            'employee_name' => 'required|string',
             'email' => 'required|email',
+            'gender' => 'nullable|string',
+            'join_date' => 'nullable|date',
+            'job_title' => 'nullable|string',
+            'job_level' => 'nullable|string',
+            'location_current_year' => 'nullable|string',
+            'ktp' => 'nullable|string',
+            'npwp' => 'nullable|string',
+            'bpjs_kesehatan' => 'nullable|string',
+            'bpjs_ketenagakerjaan' => 'nullable|string',
+            'bank_name' => 'nullable|string',
+            'bank_account' => 'nullable|string',
+            'bank_account_name' => 'nullable|string',
         ]);
 
         $employee->update($validated);
@@ -97,7 +113,7 @@ class EmployeeController extends Controller
 
     public function destroy(Employee $employee)
     {
-        $employee->delete();
+        $employee->update(['is_delete' => 1]);
         return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
     }
 }

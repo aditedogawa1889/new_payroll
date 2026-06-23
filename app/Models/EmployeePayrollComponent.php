@@ -16,9 +16,15 @@ class EmployeePayrollComponent extends Model
         'emp_number',
         'id_component',
         'value_component',
+        'basis_components',
+        'custom_formula',
         'is_active',
         'created_by',
         'updated_by'
+    ];
+
+    protected $casts = [
+        'basis_components' => 'array',
     ];
 
     public function employee()

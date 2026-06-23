@@ -14,11 +14,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="hold-transition login-page bg-gray-200">
+    @include('layouts.partials.geolocation')
     <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div class="login-box w-full max-w-md">
-            <div class="login-logo text-center mb-6">
+            <div class="login-logo text-center mb-6 flex flex-col items-center">
+                <a href="/">
+                    <img src="{{ asset('images/metland_logo.png') }}" alt="Metland Logo" class="h-10 object-contain mx-auto mb-3">
+                </a>
                 <a href="/" class="text-3xl font-light text-gray-800">
-                    <span class="font-bold">Payroll</span>System
+                    System Payroll
                 </a>
             </div>
             
@@ -30,7 +34,7 @@
             </div>
             
             <div class="text-center mt-8 text-gray-500 text-sm">
-                &copy; {{ date('Y') }} <a href="#" class="text-adminlte-primary hover:underline font-semibold">AdminLTE.io</a>. All rights reserved.
+                &copy; {{ date('Y') }} <a href="#" class="text-adminlte-primary hover:underline font-semibold">Information Technology</a>. All rights reserved.
             </div>
         </div>
     </div>
