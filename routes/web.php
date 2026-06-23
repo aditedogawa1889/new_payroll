@@ -24,8 +24,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('employees', \App\Http\Controllers\Admin\EmployeeController::class);
         
         Route::resource('loans', \App\Http\Controllers\Admin\EmployeeLoanController::class);
-        Route::get('loans/{loan}/template', [\App\Http\Controllers\Admin\EmployeeLoanController::class, 'downloadTemplate'])->name('loans.download-template');
-        Route::post('loans/{loan}/import', [\App\Http\Controllers\Admin\EmployeeLoanController::class, 'importSchedule'])->name('loans.import-schedule');
         
         Route::resource('salary-components', \App\Http\Controllers\Admin\SalaryComponentController::class);
         Route::get('salary-settings', [\App\Http\Controllers\Admin\SalarySettingController::class, 'index'])->name('salary-settings.index');

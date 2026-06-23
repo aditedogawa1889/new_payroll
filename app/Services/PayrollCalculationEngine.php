@@ -251,10 +251,12 @@ class PayrollCalculationEngine
             ->where('employee_loans_schedule.year_number', $year)
             ->whereIn('employee_loans_schedule.payment_status', [1, 2])
             ->where('employee_loans.loan_status', 1)
-            ->select('employee_loans_schedule.amount')
+            ->select('employee_loans_schedule.loan_total_sched_amount')
             ->get();
 
-        $loanDeductionSum = (float) $activeInstallments->sum('amount');
+        $loanDeductionSum = $activeInstallments->sum(function ($item) {
+            return (float) $item->loan_total_sched_amount;
+        });
 
         if ($loanDeductionSum > 0) {
             $orderedBreakdown[] = [

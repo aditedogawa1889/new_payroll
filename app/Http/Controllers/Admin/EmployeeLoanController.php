@@ -49,15 +49,57 @@ class EmployeeLoanController extends Controller
         $validated = $request->validate([
             'employee_id' => 'required|exists:employees,emp_number',
             'loan_amount' => 'required|numeric|min:1',
+            'loan_interest' => 'required|numeric|min:0',
+            'loan_months' => 'required|integer|min:1|max:120',
             'loan_date' => 'required|date',
             'loan_description' => 'nullable|string|max:1000',
         ]);
 
         $validated['loan_status'] = 1; // 1 = Aktif
 
-        $loan = EmployeeLoan::create($validated);
+        \DB::beginTransaction();
+        try {
+            $loan = EmployeeLoan::create($validated);
 
-        return redirect()->route('loans.show', $loan->loan_id)->with('success', 'Loan created successfully. Please download the Excel template and upload the installment schedule.');
+            // Auto-generate installment schedule
+            $loanAmount = (float) $validated['loan_amount'];
+            $loanMonths = (int) $validated['loan_months'];
+            $interestRate = (float) $validated['loan_interest'] / 100; // Convert % to decimal
+            $monthlyAmount = round($loanAmount / $loanMonths);
+
+            $startDate = \Carbon\Carbon::parse($validated['loan_date'])->addMonth();
+
+            for ($i = 0; $i < $loanMonths; $i++) {
+                $currentDate = $startDate->copy()->addMonths($i);
+
+                // Last month adjustment to avoid rounding issues
+                $installment = ($i === $loanMonths - 1) ? ($loanAmount - ($monthlyAmount * ($loanMonths - 1))) : $monthlyAmount;
+                $interestAmount = round($installment * $interestRate, 2);
+                $totalAmount = round($installment + $interestAmount, 2);
+                $remaining = $loanAmount - ($monthlyAmount * ($i + 1));
+                if ($remaining < 0 || $i === $loanMonths - 1) {
+                    $remaining = 0;
+                }
+
+                $loan->schedules()->create([
+                    'month_number' => $currentDate->month,
+                    'year_number' => $currentDate->year,
+                    'amount' => $installment,
+                    'loan_interest_schedule' => $interestRate,
+                    'loan_interest_sched_amount' => $interestAmount,
+                    'loan_total_sched_amount' => $totalAmount,
+                    'remaining_amount' => $remaining,
+                    'paid_amount' => 0,
+                    'payment_status' => 1, // 1 = Unpaid
+                ]);
+            }
+
+            \DB::commit();
+            return redirect()->route('loans.show', $loan->loan_id)->with('success', 'Loan created successfully with ' . $loanMonths . ' installment schedules generated automatically.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->withInput()->with('error', 'Failed to create loan: ' . $e->getMessage());
+        }
     }
 
     public function show($loan_id)
@@ -66,151 +108,17 @@ class EmployeeLoanController extends Controller
             $q->orderBy('year_number')->orderBy('month_number');
         }])->findOrFail($loan_id);
 
-        $totalPaid = $loan->schedules->sum('paid_amount');
-        $totalUnpaid = $loan->schedules->where('payment_status', 1)->sum('amount');
-        $remainingBalance = $loan->loan_amount - $totalPaid;
+        $totalPaid = $loan->schedules->sum(function ($s) {
+            return (float) $s->paid_amount;
+        });
+        $totalUnpaid = $loan->schedules->where('payment_status', 1)->sum(function ($s) {
+            return (float) $s->loan_total_sched_amount;
+        });
+        $totalInterest = $loan->schedules->sum(function ($s) {
+            return (float) $s->loan_interest_sched_amount;
+        });
+        $remainingBalance = (float) $loan->loan_amount - $totalPaid;
 
-        return view('admin.loans.show', compact('loan', 'totalPaid', 'totalUnpaid', 'remainingBalance'));
-    }
-
-    public function downloadTemplate($loan_id)
-    {
-        $loan = EmployeeLoan::findOrFail($loan_id);
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-        
-        // Headers
-        $sheet->setCellValue('A1', 'month_number');
-        $sheet->setCellValue('B1', 'year_number');
-        $sheet->setCellValue('C1', 'amount');
-        $sheet->setCellValue('D1', 'remaining_amount');
-
-        // Style headers
-        $sheet->getStyle('A1:D1')->getFont()->setBold(true);
-        
-        // Generate sample data: 12 months evenly split
-        $approxMonths = 12;
-        $monthlyAmount = round($loan->loan_amount / $approxMonths);
-        
-        $currentDate = now()->addMonth();
-        for ($i = 1; $i <= $approxMonths; $i++) {
-            $rowNum = $i + 1;
-            $remaining = $loan->loan_amount - ($monthlyAmount * $i);
-            if ($remaining < 0 || $i === $approxMonths) {
-                $remaining = 0;
-            }
-
-            $sheet->setCellValue('A' . $rowNum, $currentDate->month);
-            $sheet->setCellValue('B' . $rowNum, $currentDate->year);
-            $sheet->setCellValue('C' . $rowNum, $monthlyAmount);
-            $sheet->setCellValue('D' . $rowNum, $remaining);
-            
-            $currentDate->addMonth();
-        }
-
-        // Set column auto size
-        foreach (range('A', 'D') as $col) {
-            $sheet->getColumnDimension($col)->setAutoSize(true);
-        }
-
-        $fileName = 'template_cicilan_pinjaman_' . $loan->loan_id . '.xlsx';
-        
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="' . $fileName . '"');
-        header('Cache-Control: max-age=0');
-        
-        $writer = new Xlsx($spreadsheet);
-        $writer->save('php://output');
-        exit;
-    }
-
-    public function importSchedule(Request $request, $loan_id)
-    {
-        $loan = EmployeeLoan::findOrFail($loan_id);
-
-        $request->validate([
-            'file' => 'required|file|mimes:xlsx,xls'
-        ], [
-            'file.mimes' => 'File must be in Excel format (.xlsx or .xls)'
-        ]);
-
-        $file = $request->file('file');
-        $path = $file->getRealPath();
-
-        try {
-            $spreadsheet = IOFactory::load($path);
-            $sheet = $spreadsheet->getActiveSheet();
-            $dataRows = $sheet->toArray(null, true, true, true);
-
-            // Expect headers on row 1
-            $headerRow = array_map(function($h) {
-                return strtolower(trim($h));
-            }, $dataRows[1] ?? []);
-
-            $expectedHeaders = ['month_number', 'year_number', 'amount', 'remaining_amount'];
-            foreach ($expectedHeaders as $expected) {
-                if (!in_array($expected, $headerRow)) {
-                    return redirect()->back()->with('error', 'Excel header format is invalid. Must contain: month_number, year_number, amount, remaining_amount.');
-                }
-            }
-
-            $headerMapping = array_flip($headerRow);
-            $schedules = [];
-
-            for ($rowIdx = 2; $rowIdx <= count($dataRows); $rowIdx++) {
-                $row = $dataRows[$rowIdx];
-                
-                if (empty(array_filter($row))) {
-                    continue;
-                }
-
-                $monthKey = $headerMapping['month_number'];
-                $yearKey = $headerMapping['year_number'];
-                $amountKey = $headerMapping['amount'];
-                $remainingKey = $headerMapping['remaining_amount'];
-
-                $month = intval($row[$monthKey] ?? 0);
-                $year = intval($row[$yearKey] ?? 0);
-                $amount = floatval($row[$amountKey] ?? 0);
-                $remaining = floatval($row[$remainingKey] ?? 0);
-
-                if ($month < 1 || $month > 12 || $year < 1000 || $amount < 0 || $remaining < 0) {
-                    return redirect()->back()->with('error', 'Row ' . $rowIdx . ' contains invalid data. Make sure month is (1-12), year is (4 digits), and amount/remaining is non-negative.');
-                }
-
-                $schedules[] = [
-                    'month_number' => $month,
-                    'year_number' => $year,
-                    'amount' => $amount,
-                    'remaining_amount' => $remaining,
-                    'paid_amount' => 0,
-                    'payment_status' => 1, // 1 = Aktif / Unpaid
-                ];
-            }
-
-            if (empty($schedules)) {
-                return redirect()->back()->with('error', 'The Excel file does not have any installment data rows.');
-            }
-
-            \DB::beginTransaction();
-            try {
-                // Delete existing schedules
-                $loan->schedules()->delete();
-
-                // Create new schedules
-                foreach ($schedules as $sched) {
-                    $loan->schedules()->create($sched);
-                }
-
-                \DB::commit();
-                return redirect()->route('loans.show', $loan->loan_id)->with('success', 'Installment schedule imported successfully from Excel.');
-            } catch (\Exception $ex) {
-                \DB::rollBack();
-                return redirect()->back()->with('error', 'Failed to save data to the database: ' . $ex->getMessage());
-            }
-
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to read the Excel file: ' . $e->getMessage());
-        }
+        return view('admin.loans.show', compact('loan', 'totalPaid', 'totalUnpaid', 'totalInterest', 'remainingBalance'));
     }
 }

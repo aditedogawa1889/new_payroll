@@ -8,6 +8,16 @@ class CryptableColumnsByTable
         return [
             'employee_payroll_component' => [
                 'value_component'
+            ],
+            'employee_loans' => [
+                'loan_amount'
+            ],
+            'employee_loans_schedule' => [
+                'amount',
+                'loan_interest_sched_amount',
+                'loan_total_sched_amount',
+                'remaining_amount',
+                'paid_amount'
             ]
         ];
     }
@@ -16,6 +26,16 @@ class CryptableColumnsByTable
         return [
             'employee_payroll_component' => [
                 'value_component'
+            ],
+            'employee_loans' => [
+                'loan_amount'
+            ],
+            'employee_loans_schedule' => [
+                'amount',
+                'loan_interest_sched_amount',
+                'loan_total_sched_amount',
+                'remaining_amount',
+                'paid_amount'
             ]
         ];
     }

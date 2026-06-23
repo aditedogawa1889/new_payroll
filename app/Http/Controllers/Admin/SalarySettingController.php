@@ -77,6 +77,25 @@ class SalarySettingController extends Controller
             ->get()
             ->keyBy('id_component');
 
+        $totalNextScheduleAmount = $this->getNextScheduleLoanAmount($emp_number);
+        $koperasiComponent = $components->first(function ($c) {
+            return str_contains(strtolower($c->nama_component), 'koperasi');
+        });
+
+        if ($koperasiComponent) {
+            if ($employeeComponents->has($koperasiComponent->id_component)) {
+                $employeeComponents[$koperasiComponent->id_component]->value_component = $totalNextScheduleAmount;
+            } else {
+                $mockComponent = new EmployeePayrollComponent([
+                    'emp_number' => $emp_number,
+                    'id_component' => $koperasiComponent->id_component,
+                    'value_component' => $totalNextScheduleAmount,
+                    'is_active' => true,
+                ]);
+                $employeeComponents->put($koperasiComponent->id_component, $mockComponent);
+            }
+        }
+
         return view('admin.salary_settings.edit', compact('employee', 'components', 'employeeComponents'));
     }
 
@@ -93,6 +112,7 @@ class SalarySettingController extends Controller
 
         $employee = Employee::where('emp_number', $emp_number)->firstOrFail();
         $components = MdComponentPayroll::where('is_active', true)->get();
+        $totalNextScheduleAmount = $this->getNextScheduleLoanAmount($emp_number);
 
         foreach ($components as $component) {
             $input = $request->input('components.' . $component->id_component, []);
@@ -108,6 +128,11 @@ class SalarySettingController extends Controller
                 $basis = $input['basis_components'] ?? [];
             } elseif ($component->component_parameter === 'custom') {
                 $formula = $input['custom_formula'] ?? null;
+            }
+
+            // Force Koperasi component value to be the next schedule loan amount
+            if (str_contains(strtolower($component->nama_component), 'koperasi')) {
+                $val = $totalNextScheduleAmount;
             }
 
             $hasSetting = !is_null($val) || !empty($basis) || !empty($formula);
@@ -136,5 +161,27 @@ class SalarySettingController extends Controller
         $employee->update(['is_set_salary' => 1]);
 
         return redirect()->route('salary-settings.index')->with('success', 'Salary settings updated for ' . $employee->employee_name);
+    }
+
+    private function getNextScheduleLoanAmount($emp_number)
+    {
+        $activeLoans = \App\Models\EmployeeLoan::where('employee_id', $emp_number)
+            ->where('loan_status', 1)
+            ->get();
+
+        $totalNextScheduleAmount = 0.0;
+        foreach ($activeLoans as $loan) {
+            $nextSchedule = \App\Models\EmployeeLoanSchedule::where('loan_id', $loan->loan_id)
+                ->where('payment_status', 1) // 1 = Unpaid
+                ->orderBy('year_number')
+                ->orderBy('month_number')
+                ->first();
+            
+            if ($nextSchedule) {
+                $totalNextScheduleAmount += (float) $nextSchedule->loan_total_sched_amount;
+            }
+        }
+
+        return $totalNextScheduleAmount;
     }
 }

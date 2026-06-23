@@ -48,7 +48,9 @@
                     <div>
                         <h4 class="text-xs text-gray-400 font-bold uppercase tracking-wider mb-2">Loan Details</h4>
                         <div class="space-y-2">
-                            <p class="text-sm font-medium text-gray-700">Total Loan: <span class="font-bold text-green-600">Rp. {{ number_format($loan->loan_amount, 0, ',', '.') }}</span></p>
+                            <p class="text-sm font-medium text-gray-700">Total Loan: <span class="font-bold text-green-600">Rp. {{ number_format((float) $loan->loan_amount, 0, ',', '.') }}</span></p>
+                            <p class="text-sm font-medium text-gray-700">Interest Rate: <span class="font-bold text-blue-600">{{ number_format($loan->loan_interest, 2, ',', '.') }}%</span></p>
+                            <p class="text-sm font-medium text-gray-700">Installment Period: <span class="font-semibold text-gray-800">{{ $loan->loan_months ?? '-' }} Months</span></p>
                             <p class="text-sm font-medium text-gray-700">Loan Date: <span class="font-semibold text-gray-800">{{ $loan->loan_date ? $loan->loan_date->format('Y-m-d') : '-' }}</span></p>
                             <p class="text-sm font-medium text-gray-700">Status: 
                                 @if($loan->loan_status == 1)
@@ -82,47 +84,24 @@
                             <span class="text-sm font-bold text-green-600">Rp. {{ number_format($totalPaid, 0, ',', '.') }}</span>
                         </div>
                         <div>
-                            <span class="text-xs text-gray-400 font-medium block">Unpaid</span>
+                            <span class="text-xs text-gray-400 font-medium block">Unpaid (Incl. Interest)</span>
                             <span class="text-sm font-bold text-gray-700">Rp. {{ number_format($totalUnpaid, 0, ',', '.') }}</span>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <!-- Upload schedule form -->
-            <div class="card elevation-2 border-0 rounded-lg bg-white shadow-sm overflow-hidden flex-grow">
-                <div class="card-header bg-white border-b border-gray-100 py-4 px-6">
-                    <h3 class="card-title text-gray-700 font-semibold text-md flex items-center gap-2">
-                        <i class="fas fa-file-excel text-green-600"></i>
-                        Upload Installment Schedule
-                    </h3>
-                </div>
-                <div class="card-body p-6 space-y-4">
-                    <div class="bg-blue-50/50 border border-blue-100 text-blue-800 p-3.5 rounded-lg text-xs space-y-2">
-                        <p class="font-semibold flex items-center gap-1.5"><i class="fas fa-info-circle text-blue-600"></i> Upload Guide:</p>
-                        <ol class="list-decimal pl-4 space-y-1">
-                            <li>Download the Excel template using the button below.</li>
-                            <li>Fill in the installment details per row (month, year, amount).</li>
-                            <li>Upload the completed Excel file using the form below.</li>
-                        </ol>
-                    </div>
-
-                    <a href="{{ route('loans.download-template', $loan->loan_id) }}" class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 border border-gray-300 text-xs font-semibold rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors shadow-sm">
-                        <i class="fas fa-download text-green-600"></i> Download Excel Template
-                    </a>
-
-                    <form action="{{ route('loans.import-schedule', $loan->loan_id) }}" method="POST" enctype="multipart/form-data" class="pt-4 border-t border-gray-100 space-y-3">
-                        @csrf
+                    <div class="grid grid-cols-2 gap-4 border-t border-gray-100 pt-4">
                         <div>
-                            <label class="block text-xs font-semibold text-gray-500 mb-2">Select Excel File (.xlsx)</label>
-                            <input type="file" name="file" accept=".xlsx, .xls" class="block w-full text-xs text-gray-500 file:mr-4 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100 border border-gray-200 rounded-md p-1 bg-gray-50" required>
+                            <span class="text-xs text-gray-400 font-medium block">Total Interest</span>
+                            <span class="text-sm font-bold text-blue-600">Rp. {{ number_format($totalInterest, 0, ',', '.') }}</span>
                         </div>
-                        <button type="submit" class="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-colors">
-                            <i class="fas fa-upload"></i> Upload & Import
-                        </button>
-                    </form>
+                        <div>
+                            <span class="text-xs text-gray-400 font-medium block">Interest Rate</span>
+                            <span class="text-sm font-bold text-blue-600">{{ number_format($loan->loan_interest, 2, ',', '.') }}%</span>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -141,6 +120,9 @@
                         <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">No.</th>
                         <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Month & Year</th>
                         <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Installment Amount</th>
+                        <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Interest Rate</th>
+                        <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Interest Amount</th>
+                        <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Total Amount</th>
                         <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Remaining Balance</th>
                         <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Amount Paid</th>
                         <th class="px-6 py-3 text-left font-semibold text-gray-700 uppercase tracking-wider">Payment Date</th>
@@ -154,9 +136,12 @@
                             <td class="px-6 py-4 align-middle font-medium text-gray-800">
                                 {{ DateTime::createFromFormat('!m', $schedule->month_number)->format('F') }} {{ $schedule->year_number }}
                             </td>
-                            <td class="px-6 py-4 align-middle font-semibold text-gray-700">Rp. {{ number_format($schedule->amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 align-middle text-gray-600">Rp. {{ number_format($schedule->remaining_amount, 0, ',', '.') }}</td>
-                            <td class="px-6 py-4 align-middle text-green-600">Rp. {{ number_format($schedule->paid_amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 align-middle font-semibold text-gray-700">Rp. {{ number_format((float) $schedule->amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 align-middle text-blue-600 font-medium">{{ $schedule->loan_interest_schedule ? number_format((float) $schedule->loan_interest_schedule * 100, 2, ',', '.') . '%' : '-' }}</td>
+                            <td class="px-6 py-4 align-middle text-blue-600 font-medium">Rp. {{ number_format((float) ($schedule->loan_interest_sched_amount ?? 0), 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 align-middle font-bold text-gray-800">Rp. {{ number_format((float) ($schedule->loan_total_sched_amount ?? 0), 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 align-middle text-gray-600">Rp. {{ number_format((float) $schedule->remaining_amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 align-middle text-green-600">Rp. {{ number_format((float) $schedule->paid_amount, 0, ',', '.') }}</td>
                             <td class="px-6 py-4 align-middle text-gray-500">
                                 {{ $schedule->payment_date ? $schedule->payment_date->format('Y-m-d H:i') : '-' }}
                             </td>
@@ -174,15 +159,29 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="px-6 py-12 text-center text-gray-500 bg-gray-50/30">
+                            <td colspan="10" class="px-6 py-12 text-center text-gray-500 bg-gray-50/30">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-calendar-times text-4xl text-gray-300 mb-3"></i>
-                                    <p class="font-medium text-gray-500">Installment schedule has not been uploaded. Please upload the Excel file above.</p>
+                                    <p class="font-medium text-gray-500">Installment payment schedule is empty.</p>
                                 </div>
                             </td>
                         </tr>
                     @endforelse
                 </tbody>
+                @if($loan->schedules->isNotEmpty())
+                <tfoot class="bg-gray-50/80 font-bold border-t-2 border-gray-200 text-gray-900 text-sm">
+                    <tr>
+                        <td class="px-6 py-4 align-middle" colspan="2">Total</td>
+                        <td class="px-6 py-4 align-middle font-bold text-gray-900">Rp. {{ number_format((float) $loan->loan_amount, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 align-middle text-gray-400 font-normal">-</td>
+                        <td class="px-6 py-4 align-middle text-blue-600 font-bold">Rp. {{ number_format((float) $totalInterest, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 align-middle font-extrabold text-gray-900">Rp. {{ number_format((float) ($loan->loan_amount + $totalInterest), 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 align-middle text-gray-400 font-normal">-</td>
+                        <td class="px-6 py-4 align-middle text-green-600 font-bold">Rp. {{ number_format((float) $totalPaid, 0, ',', '.') }}</td>
+                        <td class="px-6 py-4 align-middle" colspan="2"></td>
+                    </tr>
+                </tfoot>
+                @endif
             </table>
         </div>
     </div>

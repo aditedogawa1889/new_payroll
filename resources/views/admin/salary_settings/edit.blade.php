@@ -3,24 +3,36 @@
         <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Manage Salary Components</h2>
     </x-slot>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="space-y-6">
         <!-- Employee Info -->
-        <div class="col-span-1">
+        <div class="w-full">
             <div class="card elevation-2 border-0 rounded-lg">
                 <div class="card-header bg-white border-b border-gray-100 py-4">
                     <h3 class="card-title text-gray-700 font-semibold">Employee Details</h3>
                 </div>
-                <div class="card-body p-4 text-sm text-gray-700">
-                    <p class="mb-2"><strong class="block text-gray-500 text-xs uppercase">Name</strong> <span class="font-medium text-base">{{ $employee->employee_name }}</span></p>
-                    <p class="mb-2"><strong class="block text-gray-500 text-xs uppercase">NIK</strong> {{ $employee->employee_id }}</p>
-                    <p class="mb-2"><strong class="block text-gray-500 text-xs uppercase">Job Title</strong> {{ $employee->job_title }}</p>
-                    <p class="mb-2"><strong class="block text-gray-500 text-xs uppercase">Level</strong> {{ $employee->job_level }}</p>
+                <div class="card-body p-4 text-sm text-gray-700 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div>
+                        <strong class="block text-gray-500 text-xs uppercase mb-1">Name</strong>
+                        <span class="font-medium text-base text-gray-900">{{ $employee->employee_name }}</span>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-500 text-xs uppercase mb-1">NIK</strong>
+                        <span class="text-base text-gray-900">{{ $employee->employee_id }}</span>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-500 text-xs uppercase mb-1">Job Title</strong>
+                        <span class="text-base text-gray-900">{{ $employee->job_title }}</span>
+                    </div>
+                    <div>
+                        <strong class="block text-gray-500 text-xs uppercase mb-1">Level</strong>
+                        <span class="text-base text-gray-900">{{ $employee->job_level }}</span>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Components Form -->
-        <div class="col-span-1 md:col-span-2">
+        <div class="w-full">
             <div class="card elevation-2 border-0 rounded-lg">
                 <div class="card-header bg-white border-b border-gray-100 py-4">
                     <h3 class="card-title text-gray-700 font-semibold">Component Values</h3>
@@ -56,8 +68,12 @@
                                                            data-id="{{ $component->id_component }}"
                                                            data-name="{{ $component->nama_component }}"
                                                            data-type="general"
-                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors thousands-separator" 
-                                                           placeholder="Nominal (e.g. 5.000.000)">
+                                                                                                                       @if(str_contains(strtolower($component->nama_component), 'koperasi'))
+                                                                readonly 
+                                                                class="w-full rounded-md border-gray-200 bg-gray-100/70 text-gray-600 cursor-not-allowed select-none shadow-sm sm:text-sm font-semibold transition-colors thousands-separator"
+                                                            @else
+                                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors thousands-separator" 
+                                                            @endif placeholder="Nominal (e.g. 5.000.000)">
                                                 </div>
                                             @elseif($component->component_parameter === 'percentage')
                                                 <div class="grid grid-cols-1 gap-3">
@@ -154,8 +170,12 @@
                                                            data-id="{{ $component->id_component }}"
                                                            data-name="{{ $component->nama_component }}"
                                                            data-type="general"
-                                                           class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors thousands-separator" 
-                                                           placeholder="Nominal (e.g. 500.000)">
+                                                                                                                       @if(str_contains(strtolower($component->nama_component), 'koperasi'))
+                                                                readonly 
+                                                                class="w-full rounded-md border-gray-200 bg-gray-100/70 text-gray-600 cursor-not-allowed select-none shadow-sm sm:text-sm font-semibold transition-colors thousands-separator"
+                                                            @else
+                                                                class="w-full rounded-md border-gray-300 shadow-sm focus:border-adminlte-primary focus:ring-adminlte-primary sm:text-sm transition-colors thousands-separator" 
+                                                            @endif placeholder="Nominal (e.g. 500.000)">
                                                 </div>
                                             @elseif($component->component_parameter === 'percentage')
                                                 <div class="grid grid-cols-1 gap-3">

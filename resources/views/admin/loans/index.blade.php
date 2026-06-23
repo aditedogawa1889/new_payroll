@@ -88,6 +88,7 @@
                         <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">NIK</th>
                         <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Employee Name</th>
                         <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Loan Amount</th>
+                        <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Interest (%)</th>
                         <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Loan Date</th>
                         <th class="px-6 py-3.5 text-left font-semibold text-gray-700 uppercase tracking-wider">Description</th>
                         <th class="px-6 py-3.5 text-center font-semibold text-gray-700 uppercase tracking-wider">Status</th>
@@ -100,7 +101,8 @@
                             <td class="px-6 py-4 align-middle">{{ $index + 1 }}</td>
                             <td class="px-6 py-4 align-middle font-medium">{{ $loan->employee->employee_id }}</td>
                             <td class="px-6 py-4 align-middle font-semibold text-gray-800">{{ $loan->employee->employee_name }}</td>
-                            <td class="px-6 py-4 align-middle font-semibold text-gray-700">Rp. {{ number_format($loan->loan_amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 align-middle font-semibold text-gray-700">Rp. {{ number_format((float) $loan->loan_amount, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4 align-middle text-blue-600 font-medium">{{ number_format($loan->loan_interest, 2, ',', '.') }}%</td>
                             <td class="px-6 py-4 align-middle text-gray-600">{{ $loan->loan_date ? $loan->loan_date->format('Y-m-d') : '-' }}</td>
                             <td class="px-6 py-4 align-middle text-gray-500 max-w-[200px] truncate" title="{{ $loan->loan_description }}">{{ $loan->loan_description ?? '-' }}</td>
                             <td class="px-6 py-4 align-middle text-center">
@@ -122,7 +124,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="px-6 py-12 text-center text-gray-500 bg-gray-50/30">
+                            <td colspan="9" class="px-6 py-12 text-center text-gray-500 bg-gray-50/30">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="fas fa-hand-holding-usd text-4xl text-gray-300 mb-3"></i>
                                     <p class="font-medium text-gray-500">No employee loan data found.</p>

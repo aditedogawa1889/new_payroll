@@ -18,6 +18,8 @@ class EmployeeLoan extends Model
     protected $fillable = [
         'employee_id',
         'loan_amount',
+        'loan_interest',
+        'loan_months',
         'loan_date',
         'loan_description',
         'loan_status',
