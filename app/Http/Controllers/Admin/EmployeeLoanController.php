@@ -95,18 +95,18 @@ class EmployeeLoanController extends Controller
             }
 
             \DB::commit();
-            return redirect()->route('loans.show', $loan->loan_id)->with('success', 'Loan created successfully with ' . $loanMonths . ' installment schedules generated automatically.');
+            return redirect()->route('loans.show', $loan)->with('success', 'Loan created successfully with ' . $loanMonths . ' installment schedules generated automatically.');
         } catch (\Exception $e) {
             \DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Failed to create loan: ' . $e->getMessage());
         }
     }
 
-    public function show($loan_id)
+    public function show(EmployeeLoan $loan)
     {
-        $loan = EmployeeLoan::with(['employee', 'schedules' => function($q) {
+        $loan->load(['employee', 'schedules' => function($q) {
             $q->orderBy('year_number')->orderBy('month_number');
-        }])->findOrFail($loan_id);
+        }]);
 
         $totalPaid = $loan->schedules->sum(function ($s) {
             return (float) $s->paid_amount;
@@ -120,5 +120,47 @@ class EmployeeLoanController extends Controller
         $remainingBalance = (float) $loan->loan_amount - $totalPaid;
 
         return view('admin.loans.show', compact('loan', 'totalPaid', 'totalUnpaid', 'totalInterest', 'remainingBalance'));
+    }
+
+    public function repay(Request $request, EmployeeLoan $loan)
+    {
+        $request->validate([
+            'with_interest' => 'required|boolean',
+        ]);
+
+        \DB::beginTransaction();
+        try {
+            $withInterest = $request->boolean('with_interest');
+
+            $unpaidSchedules = $loan->schedules()->where('payment_status', 1)->get();
+
+            foreach ($unpaidSchedules as $schedule) {
+                if ($withInterest) {
+                    $schedule->update([
+                        'paid_amount' => $schedule->loan_total_sched_amount,
+                        'payment_date' => now(),
+                        'payment_status' => 2, // Paid
+                    ]);
+                } else {
+                    $schedule->update([
+                        'paid_amount' => $schedule->amount,
+                        'loan_interest_sched_amount' => 0,
+                        'loan_total_sched_amount' => $schedule->amount,
+                        'payment_date' => now(),
+                        'payment_status' => 2, // Paid
+                    ]);
+                }
+            }
+
+            $loan->update([
+                'loan_status' => 2, // 2 = Paid/Lunas
+            ]);
+
+            \DB::commit();
+            return redirect()->route('loans.show', $loan)->with('success', 'Pinjaman berhasil dilunasi dipercepat.');
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal melunasi pinjaman: ' . $e->getMessage());
+        }
     }
 }

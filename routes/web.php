@@ -24,15 +24,16 @@ Route::middleware('auth')->group(function () {
         Route::resource('employees', \App\Http\Controllers\Admin\EmployeeController::class);
         
         Route::resource('loans', \App\Http\Controllers\Admin\EmployeeLoanController::class);
+        Route::post('loans/{loan}/repay', [\App\Http\Controllers\Admin\EmployeeLoanController::class, 'repay'])->name('loans.repay');
         
         Route::resource('salary-components', \App\Http\Controllers\Admin\SalaryComponentController::class);
         Route::get('salary-settings', [\App\Http\Controllers\Admin\SalarySettingController::class, 'index'])->name('salary-settings.index');
-        Route::get('salary-settings/{emp_number}/edit', [\App\Http\Controllers\Admin\SalarySettingController::class, 'edit'])->name('salary-settings.edit');
-        Route::put('salary-settings/{emp_number}', [\App\Http\Controllers\Admin\SalarySettingController::class, 'update'])->name('salary-settings.update');
+        Route::get('salary-settings/{employee}/edit', [\App\Http\Controllers\Admin\SalarySettingController::class, 'edit'])->name('salary-settings.edit');
+        Route::put('salary-settings/{employee}', [\App\Http\Controllers\Admin\SalarySettingController::class, 'update'])->name('salary-settings.update');
         
         Route::get('payroll/calculate', [\App\Http\Controllers\Admin\PayrollCalculationController::class, 'index'])->name('payroll.calculate');
-        Route::post('payroll/calculate/{emp_number}', [\App\Http\Controllers\Admin\PayrollCalculationController::class, 'calculate'])->name('payroll.calculate.process');
-        Route::post('payroll/process/{emp_number}', [\App\Http\Controllers\Admin\PayrollCalculationController::class, 'processPayment'])->name('payroll.process');
+        Route::post('payroll/calculate/{employee}', [\App\Http\Controllers\Admin\PayrollCalculationController::class, 'calculate'])->name('payroll.calculate.process');
+        Route::post('payroll/process/{employee}', [\App\Http\Controllers\Admin\PayrollCalculationController::class, 'processPayment'])->name('payroll.process');
     });
 });
 
