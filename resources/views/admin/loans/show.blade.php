@@ -99,8 +99,15 @@
                         </div>
                     </div>
                 </div>
+                </div>
+                @if($loan->loan_status == 1)
+                <div class="card-footer bg-white border-t border-gray-100 py-3 px-6 flex justify-end">
+                    <button type="button" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm transition duration-150 ease-in-out" onclick="openRepayModal()">
+                        <i class="fas fa-money-check-alt mr-2"></i> Early Repayment
+                    </button>
+                </div>
+                @endif
             </div>
-
 
         </div>
     </div>
@@ -185,4 +192,59 @@
             </table>
         </div>
     </div>
+
+    <!-- Repay Modal -->
+    <div id="repayModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
+        <div class="relative mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+                    <i class="fas fa-money-bill-wave text-green-600 text-xl"></i>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900">Pelunasan Pinjaman Dipercepat</h3>
+                <div class="mt-2 px-4 py-3">
+                    <p class="text-sm text-gray-500 mb-4">
+                        Pilih metode pelunasan sisa pinjaman Anda:
+                    </p>
+                    <form id="repayForm" method="POST" action="{{ route('loans.repay', $loan) }}">
+                        @csrf
+                        <div class="mt-4 text-left border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
+                            <label class="inline-flex items-start w-full cursor-pointer">
+                                <input type="radio" class="form-radio text-green-600 mt-1" name="with_interest" value="1" checked>
+                                <div class="ml-3">
+                                    <span class="block text-sm font-semibold text-gray-800">Sertakan Sisa Bunga</span>
+                                    <span class="block text-xs text-gray-500 mt-1">Total Bayar: <span class="font-bold text-gray-800">Rp. {{ number_format($totalUnpaid, 0, ',', '.') }}</span></span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="mt-3 text-left border rounded-lg p-3 hover:bg-gray-50 cursor-pointer">
+                            <label class="inline-flex items-start w-full cursor-pointer">
+                                <input type="radio" class="form-radio text-green-600 mt-1" name="with_interest" value="0">
+                                <div class="ml-3">
+                                    <span class="block text-sm font-semibold text-gray-800">Tanpa Bunga (Pokok Saja)</span>
+                                    <span class="block text-xs text-gray-500 mt-1">Total Bayar: <span class="font-bold text-gray-800">Rp. {{ number_format($totalUnpaid - $loan->schedules->where('payment_status', 1)->sum('loan_interest_sched_amount'), 0, ',', '.') }}</span></span>
+                                </div>
+                            </label>
+                        </div>
+                    </form>
+                </div>
+                <div class="items-center px-4 py-3 mt-4 flex justify-between gap-3 border-t border-gray-100 pt-4">
+                    <button id="closeModalBtn" class="px-4 py-2 bg-white border border-gray-300 text-gray-700 text-sm font-medium rounded-md w-full hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200">
+                        Batal
+                    </button>
+                    <button type="submit" form="repayForm" class="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-md w-full hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        Proses Pelunasan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openRepayModal() {
+            document.getElementById('repayModal').classList.remove('hidden');
+        }
+        document.getElementById('closeModalBtn').addEventListener('click', function() {
+            document.getElementById('repayModal').classList.add('hidden');
+        });
+    </script>
 </x-admin-layout>
