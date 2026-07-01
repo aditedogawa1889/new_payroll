@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\EncryptedRouteKey;
+
 class MdComponentPayroll extends Model
 {
-    use HasFactory;
+    use HasFactory, EncryptedRouteKey;
 
     protected $table = 'md_component_payroll';
     protected $primaryKey = 'id_component';

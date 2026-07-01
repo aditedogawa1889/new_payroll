@@ -112,7 +112,7 @@
                             <td class="px-4 py-3 align-middle">{{ $employee->job_title }}</td>
                             <td class="px-4 py-3 align-middle">{{ $employee->job_level }}</td>
                             <td class="px-4 py-3 align-middle">
-                                <a href="{{ route('salary-settings.edit', $employee->emp_number) }}" class="inline-flex items-center justify-center p-2 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="Manage Components">
+                                <a href="{{ route('salary-settings.edit', $employee) }}" class="inline-flex items-center justify-center p-2 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="Manage Components">
                                     <i class="fas fa-edit text-sm"></i>
                                 </a>
                             </td>

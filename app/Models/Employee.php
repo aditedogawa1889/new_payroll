@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\EncryptedRouteKey;
+
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory, EncryptedRouteKey;
 
     protected $primaryKey = 'emp_number';
     public $incrementing = false;
     protected $keyType = 'integer';
+
     protected static function booted()
     {
         static::addGlobalScope('not_deleted', function ($builder) {

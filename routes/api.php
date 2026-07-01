@@ -14,5 +14,7 @@ Route::get('/user', function (Request $request) {
 Route::middleware(['auth.api_token', 'throttle:60,1'])->group(function () {
     Route::get('/hris/types', [HrisIntegrationController::class, 'getTypes']);
     Route::post('/hris/integrations', [HrisIntegrationController::class, 'store']);
+    Route::post('/integrations/attendance', [HrisIntegrationController::class, 'storeAttendance']);
+    Route::post('/integrations/overtime', [HrisIntegrationController::class, 'storeOvertime']);
 });
 

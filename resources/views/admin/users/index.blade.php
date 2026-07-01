@@ -68,17 +68,17 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center items-center space-x-3">
-                            <a href="{{ route('users.edit', $user->id) }}" class="text-blue-600 hover:text-blue-900 transform hover:scale-110 transition-transform" title="Edit User">
+                            <a href="{{ route('users.edit', $user) }}" class="text-blue-600 hover:text-blue-900 transform hover:scale-110 transition-transform" title="Edit User">
                                 <i class="fas fa-edit text-lg"></i>
                             </a>
-                            <form action="{{ route('users.reset-password', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to reset password for this user to default &quot;Metland@123&quot;?')" class="inline">
+                            <form action="{{ route('users.reset-password', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to reset password for this user to default &quot;Metland@123&quot;?')" class="inline">
                                 @csrf
                                 <button type="submit" class="text-yellow-600 hover:text-yellow-900 transform hover:scale-110 transition-transform" title="Reset Password">
                                     <i class="fas fa-key text-lg"></i>
                                 </button>
                             </form>
                             @if($user->id !== auth()->id())
-                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
+                            <form action="{{ route('users.destroy', $user) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this user?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900 transform hover:scale-110 transition-transform" title="Delete User">

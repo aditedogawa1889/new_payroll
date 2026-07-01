@@ -16,7 +16,7 @@
 
     <div class="max-w-5xl">
         <div class="admin-card">
-            <form action="{{ route('users.update', $user->id) }}" method="POST" class="p-6">
+            <form action="{{ route('users.update', $user) }}" method="POST" class="p-6">
                 @csrf
                 @method('PUT')
 

@@ -16,7 +16,7 @@
 
     <div class="max-w-5xl">
         <div class="admin-card">
-            <form action="{{ route('employees.update', $employee->emp_number) }}" method="POST" class="p-6">
+            <form action="{{ route('employees.update', $employee) }}" method="POST" class="p-6">
                 @csrf
                 @method('PUT')
 

@@ -35,12 +35,12 @@ class PayrollCalculationController extends Controller
      * @param string $emp_number
      * @return \Illuminate\Http\JsonResponse
      */
-    public function calculate(Request $request, $emp_number)
+    public function calculate(Request $request, Employee $employee)
     {
         try {
             $month = $request->query('month');
             $year = $request->query('year');
-            $result = $this->calculationEngine->calculate($emp_number, $month, $year);
+            $result = $this->calculationEngine->calculate($employee->emp_number, $month, $year);
             return response()->json([
                 'success' => true,
                 'data' => $result
@@ -65,7 +65,7 @@ class PayrollCalculationController extends Controller
      * @param string $emp_number
      * @return \Illuminate\Http\JsonResponse
      */
-    public function processPayment(Request $request, $emp_number)
+    public function processPayment(Request $request, Employee $employee)
     {
         try {
             $month = $request->input('month');
@@ -77,8 +77,6 @@ class PayrollCalculationController extends Controller
                     'message' => 'Month and year must be selected.'
                 ], 422);
             }
-
-            $employee = Employee::where('emp_number', $emp_number)->firstOrFail();
 
             // Find unpaid schedules for this month and year
             $schedules = \App\Models\EmployeeLoanSchedule::whereHas('loan', function($q) use ($employee) {

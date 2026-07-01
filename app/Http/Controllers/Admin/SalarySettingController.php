@@ -67,9 +67,9 @@ class SalarySettingController extends Controller
         return view('admin.salary_settings.index', compact('employees', 'jobTitles', 'jobLevels', 'locations'));
     }
 
-    public function edit($emp_number)
+    public function edit(Employee $employee)
     {
-        $employee = Employee::where('emp_number', $emp_number)->firstOrFail();
+        $emp_number = $employee->emp_number;
         $components = MdComponentPayroll::where('is_active', true)->with('type')->get();
         
         $employeeComponents = EmployeePayrollComponent::where('emp_number', $emp_number)
@@ -99,7 +99,7 @@ class SalarySettingController extends Controller
         return view('admin.salary_settings.edit', compact('employee', 'components', 'employeeComponents'));
     }
 
-    public function update(Request $request, $emp_number)
+    public function update(Request $request, Employee $employee)
     {
         $request->validate([
             'components' => 'array',
@@ -110,7 +110,7 @@ class SalarySettingController extends Controller
             'components.*.value.min' => 'Component value cannot be negative.'
         ]);
 
-        $employee = Employee::where('emp_number', $emp_number)->firstOrFail();
+        $emp_number = $employee->emp_number;
         $components = MdComponentPayroll::where('is_active', true)->get();
         $totalNextScheduleAmount = $this->getNextScheduleLoanAmount($emp_number);
 

@@ -117,7 +117,7 @@
                                 @endif
                             </td>
                             <td class="px-6 py-4 align-middle text-center">
-                                <a href="{{ route('loans.show', $loan->loan_id) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0" title="View Detail">
+                                <a href="{{ route('loans.show', $loan) }}" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold tracking-wide text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0" title="View Detail">
                                     <i class="fas fa-eye"></i> Detail
                                 </a>
                             </td>

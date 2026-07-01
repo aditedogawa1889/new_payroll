@@ -138,14 +138,14 @@
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <div class="flex items-center space-x-3">
-                                <a href="{{ route('employees.show', $employee->emp_number) }}" class="inline-flex items-center justify-center p-2 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="View History">
+                                <a href="{{ route('employees.show', $employee) }}" class="inline-flex items-center justify-center p-2 rounded bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors" title="View History">
                                     <i class="fas fa-history text-sm"></i>
                                 </a>
                                 @if(!$employee->termination_date)
-                                <a href="{{ route('employees.edit', $employee->emp_number) }}" class="inline-flex items-center justify-center p-2 rounded bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition-colors" title="Edit">
+                                <a href="{{ route('employees.edit', $employee) }}" class="inline-flex items-center justify-center p-2 rounded bg-yellow-50 text-yellow-600 hover:bg-yellow-100 transition-colors" title="Edit">
                                     <i class="fas fa-edit text-sm"></i>
                                 </a>
-                                <form action="{{ route('employees.destroy', $employee->emp_number) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this employee?')">
+                                <form action="{{ route('employees.destroy', $employee) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this employee?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="inline-flex items-center justify-center p-2 rounded bg-red-50 text-red-600 hover:bg-red-100 transition-colors" title="Delete">
