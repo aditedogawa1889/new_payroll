@@ -1,0 +1,34 @@
+Buatkan issue.md berisi planing untuk membuat yaitu:
+
+buatkan table employee_attendances dengan kolom:
+- id_attendance int identity primary key
+- employee_id int foreign key references employees(emp_number)
+- period_st date not null
+- period_en date not null
+- payroll_date date null
+- attendance_days numeric(18,2) default 0
+- created_at datetime
+- updated_at datetime
+
+lalu buatkan dokumentasi API untuk memasukan data summary attendance ke table diatas.
+buatkan juga dokumentasi API tersebut pada file collection_integration_employee.json
+
+dimana nantinya API ini digunakan untuk memasukan jumlah kehadiran
+dari system absensi ke system payroll.
+
+buatkan table employee_overtime dengan kolom:
+- id_overtime int identity primary key
+- employee_id int foreign key references employees(emp_number)
+- period_ot_st date not null
+- period_ot_en date not null
+- payroll_ot_date date null
+- overtime_hours numeric(18,2) default 0
+- overtime_meals numeric(18,0) default 0
+- created_at datetime
+- updated_at datetime
+
+lalu buatkan dokumentasi API untuk memasukan data summary overtime ke table diatas.
+buatkan juga dokumentasi API tersebut pada file collection_integration_employee.json 
+
+dimana nantinya API ini digunakan untuk memasukan jumlah lembur
+dari system overtime ke system payroll.

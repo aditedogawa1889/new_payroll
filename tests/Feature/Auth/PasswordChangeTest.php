@@ -50,7 +50,7 @@ class PasswordChangeTest extends TestCase
             'password' => bcrypt('old-password'),
         ]);
 
-        $response = $this->actingAs($admin)->post(route('users.reset-password', $userToReset->id));
+        $response = $this->actingAs($admin)->post(route('users.reset-password', $userToReset));
 
         $response->assertRedirect(route('users.index'));
         $userToReset->refresh();

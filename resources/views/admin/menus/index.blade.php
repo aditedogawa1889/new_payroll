@@ -73,10 +73,10 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium flex justify-center space-x-3">
-                            <a href="{{ route('menus.edit', $menu->id_menu) }}" class="text-blue-600 hover:text-blue-900 transform hover:scale-110 transition-transform" title="Edit Menu">
+                            <a href="{{ route('menus.edit', $menu) }}" class="text-blue-600 hover:text-blue-900 transform hover:scale-110 transition-transform" title="Edit Menu">
                                 <i class="fas fa-edit text-lg"></i>
                             </a>
-                            <form action="{{ route('menus.destroy', $menu->id_menu) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this menu?')">
+                            <form action="{{ route('menus.destroy', $menu) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this menu?')">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="text-red-600 hover:text-red-900 transform hover:scale-110 transition-transform" title="Delete Menu">

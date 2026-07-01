@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Traits\EncryptedRouteKey;
+
 class EmployeeLoan extends Model
 {
-    use HasFactory;
+    use HasFactory, EncryptedRouteKey;
 
     protected $table = 'employee_loans';
     protected $primaryKey = 'loan_id';

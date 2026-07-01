@@ -50,7 +50,12 @@ class EmployeeLoanTest extends TestCase
         $loan = EmployeeLoan::first();
         $this->assertNotNull($loan);
         $this->assertEquals(10, $loan->loan_months);
-        $response->assertRedirect(route('loans.show', $loan->loan_id));
+        $location = $response->headers->get('Location');
+        $prefix = url('/admin/loans') . '/';
+        $this->assertStringStartsWith($prefix, $location);
+        $encryptedKey = substr($location, strlen($prefix));
+        $decryptedId = \Illuminate\Support\Facades\Crypt::decryptString($encryptedKey);
+        $this->assertEquals($loan->loan_id, $decryptedId);
 
         // Total generated schedules should match loan_months
         $schedules = EmployeeLoanSchedule::where('loan_id', $loan->loan_id)->get();
@@ -106,7 +111,7 @@ class EmployeeLoanTest extends TestCase
             ]);
         }
 
-        $response = $this->actingAs($this->user)->get(route('loans.show', $loan->loan_id));
+        $response = $this->actingAs($this->user)->get(route('loans.show', $loan));
         $response->assertStatus(200);
 
         // Verify variables passed to the view
@@ -178,7 +183,7 @@ class EmployeeLoanTest extends TestCase
         ]);
 
         // 2. Fetch the Edit page
-        $response = $this->actingAs($this->user)->get(route('salary-settings.edit', $this->employee->emp_number));
+        $response = $this->actingAs($this->user)->get(route('salary-settings.edit', $this->employee));
         $response->assertStatus(200);
 
         // Verify injected component value is the next schedule total (1,010,000)
@@ -188,7 +193,7 @@ class EmployeeLoanTest extends TestCase
         });
 
         // 3. Save salary settings form
-        $response = $this->actingAs($this->user)->put(route('salary-settings.update', $this->employee->emp_number), [
+        $response = $this->actingAs($this->user)->put(route('salary-settings.update', $this->employee), [
             'components' => [
                 $koperasiComponent->id_component => [
                     'value' => '9999999' // Try to send different value

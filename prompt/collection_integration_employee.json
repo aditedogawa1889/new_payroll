@@ -178,6 +178,76 @@
                 "description": "Pemutusan hubungan kerja / resign karyawan (id_integ_type: 3).\n\ntermination_date = tanggal PHK/resign\nlast_payroll_date = tanggal gaji terakhir dibayarkan"
             },
             "response": []
+        },
+        {
+            "name": "5. Post Summary Attendance",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"employee_id\": 2026001,\n    \"period_st\": \"2026-06-01\",\n    \"period_en\": \"2026-06-30\",\n    \"payroll_date\": \"2026-06-25\",\n    \"attendance_days\": 21.5\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": "{{base_url}}/api/integrations/attendance",
+                "description": "Mengirimkan data rekapitulasi kehadiran (summary attendance) dari sistem absensi ke sistem payroll."
+            },
+            "response": []
+        },
+        {
+            "name": "6. Post Summary Overtime",
+            "request": {
+                "method": "POST",
+                "header": [
+                    {
+                        "key": "Accept",
+                        "value": "application/json",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Authorization",
+                        "value": "Bearer {{token}}",
+                        "type": "text"
+                    },
+                    {
+                        "key": "Content-Type",
+                        "value": "application/json",
+                        "type": "text"
+                    }
+                ],
+                "body": {
+                    "mode": "raw",
+                    "raw": "{\n    \"employee_id\": 2026001,\n    \"period_ot_st\": \"2026-06-01\",\n    \"period_ot_en\": \"2026-06-30\",\n    \"payroll_ot_date\": \"2026-06-25\",\n    \"overtime_hours\": 15.5,\n    \"overtime_meals\": 4\n}",
+                    "options": {
+                        "raw": {
+                            "language": "json"
+                        }
+                    }
+                },
+                "url": "{{base_url}}/api/integrations/overtime",
+                "description": "Mengirimkan data rekapitulasi lembur (summary overtime) dari sistem lembur ke sistem payroll."
+            },
+            "response": []
         }
     ],
     "variable": [

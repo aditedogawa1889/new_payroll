@@ -16,7 +16,7 @@
 
     <div class="max-w-4xl">
         <div class="admin-card">
-            <form action="{{ route('menus.update', $menu->id_menu) }}" method="POST" class="p-6">
+            <form action="{{ route('menus.update', $menu) }}" method="POST" class="p-6">
                 @csrf
                 @method('PUT')
 

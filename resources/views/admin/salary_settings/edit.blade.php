@@ -37,7 +37,7 @@
                 <div class="card-header bg-white border-b border-gray-100 py-4">
                     <h3 class="card-title text-gray-700 font-semibold">Component Values</h3>
                 </div>
-                <form id="salary-settings-form" action="{{ route('salary-settings.update', $employee->emp_number) }}" method="POST">
+                <form id="salary-settings-form" action="{{ route('salary-settings.update', $employee) }}" method="POST">
                     @csrf
                     @method('PUT')
                     

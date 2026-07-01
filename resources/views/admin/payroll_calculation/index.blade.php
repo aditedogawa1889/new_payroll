@@ -13,13 +13,13 @@
         formatCurrency(val) {
             return 'Rp. ' + new Intl.NumberFormat('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(val);
         },
-        calculatePayroll(empNumber) {
+        calculatePayroll(routeKey) {
             this.loading = true;
             this.errorMessage = '';
             this.openModal = true;
             this.calcData = null;
             
-            fetch(`/admin/payroll/calculate/${empNumber}?month=${this.month}&year=${this.year}`, {
+            fetch(`/admin/payroll/calculate/${routeKey}?month=${this.month}&year=${this.year}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,14 +41,14 @@
                 this.errorMessage = err.message || 'An error occurred while calculating the salary.';
             });
         },
-        processPayment(empNumber) {
+        processPayment(routeKey) {
             if (!confirm('Are you sure you want to process the payroll and record the loan installment deduction payment for this period?')) {
                 return;
             }
             this.loading = true;
             this.errorMessage = '';
             
-            fetch(`/admin/payroll/process/${empNumber}`, {
+            fetch(`/admin/payroll/process/${routeKey}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -67,7 +67,7 @@
             })
             .then(json => {
                 alert(json.message);
-                this.calculatePayroll(empNumber);
+                this.calculatePayroll(routeKey);
             })
             .catch(err => {
                 this.loading = false;
@@ -123,7 +123,7 @@
                                 <td class="px-6 py-4 align-middle text-gray-600">{{ $employee->job_title }}</td>
                                 <td class="px-6 py-4 align-middle text-gray-600">{{ $employee->job_level }}</td>
                                 <td class="px-6 py-4 align-middle text-center">
-                                    <button @click="calculatePayroll('{{ $employee->emp_number }}')" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0">
+                                    <button @click="calculatePayroll('{{ $employee->getRouteKey() }}')" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold tracking-wide text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-all duration-150 transform hover:-translate-y-0.5 active:translate-y-0">
                                         <i class="fas fa-play text-[10px]"></i>
                                         Calculate Salary
                                     </button>
@@ -376,7 +376,7 @@
                 <div class="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
                     <div>
                         <template x-if="calcData?.components.some(c => c.id_component === 'loan_deduction')">
-                            <button @click="processPayment(calcData?.employee?.emp_number)" 
+                            <button @click="processPayment(calcData?.employee?.route_key)" 
                                     class="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm transition-colors">
                                 <i class="fas fa-check-double"></i>
                                 Process Payroll & Pay Installment

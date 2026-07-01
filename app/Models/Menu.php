@@ -6,8 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Traits\EncryptedRouteKey;
+
 class Menu extends Model
 {
+    use EncryptedRouteKey;
+
     protected $table = 'menus';
     protected $primaryKey = 'id_menu';
 
